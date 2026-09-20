@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yifan Feng — Quantitative Research Portfolio</title>
+  <meta name="description" content="Quantitative research at the intersection of deep learning, financial data and on-chain market microstructure." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">Yifan&nbsp;Feng</a>
+      <nav>
+        <a href="#research">Research</a>
+        <a href="#skills">Skills</a>
+        <a href="https://github.com/Vela-yf" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <p class="eyebrow">Quantitative Research · Deep Learning · On-Chain Data</p>
+      <h1>Turning messy financial data into<br />testable trading signals.</h1>
+      <p class="lede">
+        I build end-to-end quantitative research pipelines — data engineering, factor modeling,
+        deep learning and backtesting — and stress-test them for the only thing that matters:
+        whether the signal survives real-world frictions.
+      </p>
+      <div class="hero-links">
+        <a class="btn primary" href="#research">View research</a>
+        <a class="btn" href="https://github.com/Vela-yf" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
+
+    <section id="research" class="container">
+      <h2>Selected research</h2>
+      <p class="section-sub">Two independent studies, each shipped as a reproducible repository.</p>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/stock-strategy.png" alt="Strategy performance chart" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <p class="tags"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span></p>
+          <h3>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h3>
+          <p>
+            A fusion architecture (MLP for quarterly financials + CNN-LSTM for daily price/volume,
+            combined by self-attention) trained with a pairwise ranking objective on CSI 300 constituents.
+          </p>
+          <ul>
+            <li><strong>+26% Mean IC</strong> and <strong>+33% RankIC</strong> from adding fundamentals to a price-only baseline (627k observations)</li>
+            <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark; caveats documented in the repo</li>
+            <li>Full ablation, ranking-loss design and honest backtest caveats documented in the repo</li>
+          </ul>
+          <div class="card-links">
+            <a href="https://github.com/Vela-yf/mixed-frequency-stock-prediction" target="_blank" rel="noopener">Repository →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reverse">
+        <div class="card-media">
+          <img src="assets/mev-ic.png" alt="MEV factor IC chart" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Rust</span></p>
+          <h3>On-Chain MEV Signals for Cryptocurrency Timing</h3>
+          <p>
+            Do Ethereum sandwich attacks predict BTC volatility? 3 MEV-native features plus 26
+            technical factors, de-correlated with Jaccard-similarity spectral clustering, backtested
+            with cost sensitivity analysis.
+          </p>
+          <ul>
+            <li>MEV features show <strong>|IC| 0.10–0.27</strong> and near-orthogonality to classical price factors</li>
+            <li>Strongest channel is <strong>volatility timing</strong>, not direction — MEV measures market fragility</li>
+            <li>Break-even at <strong>~0.23 bp</strong> of fees: a clean demonstration that alpha is execution-bound</li>
+            <li>Includes a <strong>Rust MEV bot</strong> (mempool monitoring, Uniswap-V2 math) as the execution layer</li>
+          </ul>
+          <div class="card-links">
+            <a href="https://github.com/Vela-yf/onchain-mev-crypto-timing" target="_blank" rel="noopener">Repository →</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="skills" class="container">
+      <h2>Toolbox</h2>
+      <div class="chips">
+        <span>Python</span><span>PyTorch</span><span>pandas / NumPy</span><span>scikit-learn</span>
+        <span>vectorbt</span><span>Backtesting</span><span>Factor Research</span><span>IC / Clustering</span>
+        <span>Rust</span><span>Solidity</span><span>Web3 / ethers-rs</span><span>Dune Analytics</span>
+        <span>SQL</span><span>Parquet</span><span>Git</span><span>Cloudflare Pages</span>
+      </div>
+      <p class="education">
+        BSc, Renmin University of China — Accounting (Business School) &amp; Finance (Gaoli Institute).
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2026 Yifan Feng</p>
+      <p><a href="https://github.com/Vela-yf" target="_blank" rel="noopener">github.com/Vela-yf</a></p>
+    </div>
+  </footer>
+</body>
+</html>
