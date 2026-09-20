@@ -11,11 +11,10 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="#top">Yifan&nbsp;Feng</a>
+      <a class="brand" href="index.html">Yifan&nbsp;Feng</a>
       <nav>
         <a href="#research">Research</a>
-        <a href="#skills">Skills</a>
-        <a href="https://github.com/Vela-yf" target="_blank" rel="noopener">GitHub</a>
+        <a href="#skills">Toolbox</a>
       </nav>
     </div>
   </header>
@@ -31,13 +30,13 @@
       </p>
       <div class="hero-links">
         <a class="btn primary" href="#research">View research</a>
-        <a class="btn" href="https://github.com/Vela-yf" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="#skills">Toolbox</a>
       </div>
     </section>
 
     <section id="research" class="container">
       <h2>Selected research</h2>
-      <p class="section-sub">Two independent studies, each shipped as a reproducible repository.</p>
+      <p class="section-sub">Two independent studies, written up as full reports on this site.</p>
 
       <article class="card">
         <div class="card-media">
@@ -52,11 +51,11 @@
           </p>
           <ul>
             <li><strong>+26% Mean IC</strong> and <strong>+33% RankIC</strong> from adding fundamentals to a price-only baseline (627k observations)</li>
-            <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark; caveats documented in the repo</li>
-            <li>Full ablation, ranking-loss design and honest backtest caveats documented in the repo</li>
+            <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark</li>
+            <li>Full ablation, ranking-loss design and honest backtest caveats in the report</li>
           </ul>
           <div class="card-links">
-            <a href="https://github.com/Vela-yf/mixed-frequency-stock-prediction" target="_blank" rel="noopener">Repository →</a>
+            <a href="research/mixed-frequency-stock-prediction.html">Read the full report →</a>
           </div>
         </div>
       </article>
@@ -66,7 +65,7 @@
           <img src="assets/mev-ic.png" alt="MEV factor IC chart" loading="lazy" />
         </div>
         <div class="card-body">
-          <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Rust</span></p>
+          <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span></p>
           <h3>On-Chain MEV Signals for Cryptocurrency Timing</h3>
           <p>
             Do Ethereum sandwich attacks predict BTC volatility? 3 MEV-native features plus 26
@@ -77,10 +76,9 @@
             <li>MEV features show <strong>|IC| 0.10–0.27</strong> and near-orthogonality to classical price factors</li>
             <li>Strongest channel is <strong>volatility timing</strong>, not direction — MEV measures market fragility</li>
             <li>Break-even at <strong>~0.23 bp</strong> of fees: a clean demonstration that alpha is execution-bound</li>
-            <li>Includes a <strong>Rust MEV bot</strong> (mempool monitoring, Uniswap-V2 math) as the execution layer</li>
           </ul>
           <div class="card-links">
-            <a href="https://github.com/Vela-yf/onchain-mev-crypto-timing" target="_blank" rel="noopener">Repository →</a>
+            <a href="research/onchain-mev-crypto-timing.html">Read the full report →</a>
           </div>
         </div>
       </article>
@@ -103,7 +101,7 @@
   <footer class="footer">
     <div class="container footer-inner">
       <p>© 2026 Yifan Feng</p>
-      <p><a href="https://github.com/Vela-yf" target="_blank" rel="noopener">github.com/Vela-yf</a></p>
+      <p class="divider-note">Research portfolio · venti0331.trade</p>
     </div>
   </footer>
 </body>

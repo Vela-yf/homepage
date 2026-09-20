@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>On-Chain MEV Signals for Crypto Timing — Yifan Feng</title>
+  <meta name="description" content="Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, spectral clustering and cost sensitivity." />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="../index.html">Yifan&nbsp;Feng</a>
+      <nav><a href="../index.html#research">Research</a></nav>
+    </div>
+  </header>
+
+  <main class="article">
+    <a class="back" href="../index.html#research">← Back to research</a>
+    <h1>On-Chain MEV Signals for Cryptocurrency Timing</h1>
+    <p class="subtitle">Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, with spectral clustering and cost-sensitivity analysis.</p>
+    <p class="meta"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span><span>2019–2026</span></p>
+
+    <div class="tldr">
+      <ul>
+        <li>Built a multi-source dataset (<strong>2019–2026</strong>): BTC/USDT high-frequency OHLCV plus Ethereum <strong>sandwich-attack traces</strong> extracted from Dune Analytics.</li>
+        <li>Designed <strong>3 MEV-native features</strong> capturing on-chain adversarial flow: attack <em>intensity</em>, attacked <em>volume share</em>, and <em>attack efficiency</em>.</li>
+        <li>MEV features carry strong standalone information (<strong>|IC| 0.10 – 0.27</strong>) and are close to orthogonal to classical price/volume factors — they describe a part of the market price data does not see.</li>
+        <li>Used <strong>Jaccard-similarity spectral clustering</strong> to de-correlate the factor zoo; the strongest channel is <strong>volatility timing</strong>, not direction.</li>
+        <li>Cost analysis is the punchline: a frictionless backtest reached <strong>~180× cumulative excess return</strong>, but the strategy <strong>breaks even at only ~0.23 bp of fees</strong>. The alpha is real but execution-bound.</li>
+      </ul>
+    </div>
+
+    <h2>1. Motivation</h2>
+    <p>
+      MEV (Maximal Extractable Value) is the profit extracted by reordering, inserting or censoring
+      transactions within a block. Sandwich attacks — buying before a victim's swap and selling right
+      after — are its most visible form, and they are <strong>on-chain observable</strong>: every attack is a
+      public sequence of swaps.
+    </p>
+    <p>That makes MEV data an unusual signal source:</p>
+    <ul>
+      <li>It measures <strong>adversarial, informed flow</strong> rather than aggregate volume.</li>
+      <li>It behaves like a <strong>stress indicator</strong>: attacks cluster around liquidity fragmentation, high volatility and retail order-flow imbalance.</li>
+      <li>It is <strong>structurally different</strong> from exchange OHLCV data — a candidate orthogonal alpha source, especially for volatility rather than direction.</li>
+    </ul>
+    <p>The question this study asks: can on-chain MEV activity be turned into tradable timing signals for BTC, and what does execution cost do to them?</p>
+
+    <h2>2. Data</h2>
+    <table>
+      <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
+      <tr><td>Price / volume</td><td>High-frequency bars</td><td>BTC/USDT OHLCV</td><td>Centralized exchange data</td></tr>
+      <tr><td>On-chain MEV</td><td>Event-level</td><td>Sandwich attacks, victim/attacker amounts, fees, transaction traces</td><td>Dune Analytics</td></tr>
+    </table>
+    <p>
+      Coverage: <strong>2019-01 – 2026-01</strong> (2,584 days in the labeled dataset), with
+      745,326 aligned observations across the factor panel.
+    </p>
+
+    <h2>3. MEV-native features</h2>
+    <table>
+      <tr><th>Feature</th><th>Definition</th><th>Economic reading</th></tr>
+      <tr><td><code>f_sandwich_intensity_z</code></td><td>Sandwiched transactions per unit time, standardized</td><td>Frequency of adversarial intervention</td></tr>
+      <tr><td><code>f_mev_vol_share_z</code></td><td>Attacked volume / total volume</td><td>How much flow is being exploited</td></tr>
+      <tr><td><code>f_attack_eff_z</code></td><td>Victim volume / attacker volume</td><td>Profitability of attacks = market vulnerability</td></tr>
+    </table>
+    <p>
+      Plus <strong>26+ classical technical factors</strong> (momentum, mean-reversion, volume/liquidity,
+      volatility, intraday structure, Alpha101-style) implemented on top of <code>vectorbt</code>: ROC,
+      MA deviation, MACD, TSI, Bollinger width/%B, CCI, distance-to-high/low, KDJ, OBV, VWAP
+      deviation, CMF, volume surge, MFI, ATR, Garman-Klass volatility, realized vol, high-low spread,
+      skew/kurtosis, bar structure, price-volume correlation, time-series volume rank and more.
+    </p>
+
+    <h2>4. Methodology</h2>
+    <pre>Dune extraction ──► MEV features ─┐
+                                  ├─► IC screen (Spearman) ──► correlation pruning
+OHLCV ──► 26+ tech factors ───────┘              │
+                                                 ▼
+                        Jaccard-similarity spectral clustering
+                                                 │
+                        ┌────────────────────────┴───────────────────────┐
+                        ▼                                                ▼
+              direction prediction                            volatility (|return|) prediction
+                        └────────────────────────┬───────────────────────┘
+                                                 ▼
+                                       signal backtests (vectorbt)</pre>
+    <ol>
+      <li><strong>IC screening.</strong> Rank-IC (Spearman) of every factor against forward returns; MEV features are also tested against |returns| to capture the volatility channel.</li>
+      <li><strong>De-correlation.</strong> Factors are pruned on pairwise correlation, then clustered by <strong>spectral clustering on a Jaccard similarity matrix</strong>, so each cluster carries one theme (momentum, liquidity, volatility, MEV, …).</li>
+      <li><strong>Group tests.</strong> Cluster representatives are tested on direction and absolute-return targets, producing 60 quantile / IC charts.</li>
+      <li><strong>Signal construction &amp; cost sensitivity.</strong> Cluster signals are combined and backtested, sweeping fee assumptions to locate the break-even.</li>
+    </ol>
+
+    <h2>5. Results</h2>
+    <h3>MEV features vs. classical factors (standalone IC)</h3>
+    <table>
+      <tr><th>Factor</th><th>Target</th><th>IC (Spearman)</th></tr>
+      <tr><td><code>f_sandwich_intensity_z</code></td><td>forward return</td><td><strong>+0.104</strong></td></tr>
+      <tr><td><code>f_mev_vol_share_z</code></td><td>forward return</td><td><strong>−0.273</strong></td></tr>
+      <tr><td><code>f_attack_eff_z</code></td><td>forward return</td><td><strong>−0.186</strong></td></tr>
+      <tr><td>most technical factors (ROC / CCI / MA-dev, …)</td><td>forward return</td><td>≈ −0.006 … +0.006</td></tr>
+    </table>
+    <p><strong>Magnitude.</strong> MEV features are an order of magnitude more informative than typical technical factors on this sample — with the caveat that these are measured on the full sample, so they are screening evidence, not out-of-sample performance.</p>
+    <p><strong>Orthogonality.</strong> Correlation with price/volume factors is low, so MEV features survive pruning and clustering as a distinct theme rather than a proxy for volatility.</p>
+
+    <figure>
+      <img src="../assets/mev/f_sandwich_intensity_z.png" alt="Sandwich intensity factor chart" loading="lazy" />
+      <figcaption>Sandwich intensity: quantile behaviour and IC profile.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/mev/f_mev_vol_share_z.png" alt="MEV volume share factor chart" loading="lazy" />
+      <figcaption>MEV-attacked volume share — the strongest standalone MEV signal.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/mev/f_attack_eff_z.png" alt="Attack efficiency factor chart" loading="lazy" />
+      <figcaption>Attack efficiency (victim / attacker volume).</figcaption>
+    </figure>
+
+    <h3>Direction vs. volatility</h3>
+    <ul>
+      <li><strong>Direction:</strong> the aggregated signal reached a rank IC of ≈ <strong>0.007</strong> — statistically present but economically thin.</li>
+      <li><strong>Volatility (|return|):</strong> MEV clusters rank among the strongest groups; sandwich activity spikes precede elevated volatility and liquidity stress.</li>
+    </ul>
+    <p>This is the economically sensible reading: MEV measures <em>fragility</em>, not <em>direction</em>.</p>
+
+    <h3>Cost sensitivity — the real result</h3>
+    <table>
+      <tr><th>Backtest assumption</th><th>Outcome</th></tr>
+      <tr><td>Frictionless</td><td>~<strong>180×</strong> cumulative excess return</td></tr>
+      <tr><td>Realistic fees</td><td>strongly negative (a fee-inclusive run: −95% over ~2,100 trades)</td></tr>
+      <tr><td>Break-even round-trip fee</td><td><strong>≈ 0.23 bp</strong></td></tr>
+    </table>
+    <p>
+      The practical finding: the signal can be strong and still not survive retail cost structures.
+      This strategy class is viable only with <strong>top-tier execution</strong> — colocated infrastructure,
+      maker rebates, fee tiering. The research therefore ships an execution layer as well: a Rust
+      MEV bot for pending-transaction monitoring and Uniswap-V2 pricing math, used to observe and
+      prototype sandwich execution.
+    </p>
+
+    <h2>6. Limitations</h2>
+    <ul>
+      <li>IC values for MEV features are measured on the full sample; the honest next step is walk-forward evaluation.</li>
+      <li>BTC/USDT is the only traded asset; cross-asset robustness is untested.</li>
+      <li>A break-even fee of ~0.23 bp means the strategy is effectively unreachable for most participants — the main practical conclusion.</li>
+      <li>MEV features rely on Dune-indexed data; availability and latency are not guaranteed at live trading horizons.</li>
+    </ul>
+    <p class="divider-note">This work is for research and educational purposes only and is not investment advice.</p>
+
+    <p class="divider-note" style="margin-top:48px;">© 2026 Yifan Feng · Research portfolio</p>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2026 Yifan Feng</p>
+      <p><a href="../index.html#research">← All research</a></p>
+    </div>
+  </footer>
+</body>
+</html>

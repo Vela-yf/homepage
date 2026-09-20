@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mixed-Frequency Deep Learning for Stock Prediction — Yifan Feng</title>
+  <meta name="description" content="Do financial statements still add alpha beyond price and volume? A mixed-frequency deep learning study on CSI 300 constituents." />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="../index.html">Yifan&nbsp;Feng</a>
+      <nav><a href="../index.html#research">Research</a></nav>
+    </div>
+  </header>
+
+  <main class="article">
+    <a class="back" href="../index.html#research">← Back to research</a>
+    <h1>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h1>
+    <p class="subtitle">Do financial statements still add alpha beyond price and volume? An empirical study on CSI 300 constituents.</p>
+    <p class="meta"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span><span>627k observations</span><span>1,225-day backtest</span></p>
+
+    <div class="tldr">
+      <ul>
+        <li>Built a <strong>mixed-frequency deep learning</strong> pipeline combining <strong>quarterly financial statement data</strong> (MLP branch) with <strong>daily price/volume data</strong> (CNN-LSTM branch), fused by a <strong>self-attention</strong> layer.</li>
+        <li>Trained with a <strong>pairwise ranking loss</strong> so the model optimizes the cross-sectional ranking of stocks — the objective that actually matters for selection — instead of pointwise return regression.</li>
+        <li>Adding financial features improved cross-sectional <strong>Mean IC by ~26%</strong> (0.0073 → 0.0092) and <strong>RankIC by ~33%</strong> (0.0050 → 0.0067); ICIR rose from 0.11 to 0.16.</li>
+        <li>Over 1,225 trading days the fused model achieved <strong>+144.7% annualized (Sharpe 2.98)</strong> in simulation versus <strong>+26.2% (Sharpe 1.62)</strong> for the equal-weighted CSI 300 benchmark — under simplified assumptions described below.</li>
+      </ul>
+    </div>
+
+    <h2>1. Motivation</h2>
+    <p>
+      Most daily-frequency stock-selection models are trained only on price/volume data. Accounting
+      fundamentals move slowly — they are updated quarterly — but they remain the primary channel
+      through which firm value is communicated to the market.
+    </p>
+    <p>
+      This study asks a narrow, practical question: <strong>when market and fundamental data have
+      different sampling frequencies, does a deep model with an explicit fusion mechanism extract
+      incremental predictive power from financial statements?</strong>
+    </p>
+    <table>
+      <tr><th>Design choice</th><th>Why</th></tr>
+      <tr><td>Separate MLP branch for quarterly financials</td><td>Fundamentals are tabular, low-frequency and smooth — a different inductive bias from price series</td></tr>
+      <tr><td>CNN-LSTM branch for daily OHLCV</td><td>CNN captures local price-volume structure; LSTM captures longer temporal dependence</td></tr>
+      <tr><td>Self-attention at the fusion layer</td><td>Lets the model dynamically re-weight fundamental vs. technical signals as the regime changes</td></tr>
+      <tr><td>Pairwise ranking loss</td><td>Portfolio construction only needs the <em>order</em> of predicted returns, not their level</td></tr>
+    </table>
+
+    <h2>2. Data</h2>
+    <table>
+      <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
+      <tr><td>Price / volume</td><td>Daily</td><td>OHLCV and derived technical inputs for CSI 300 constituents</td><td>Wind terminal</td></tr>
+      <tr><td>Financial statements</td><td>Quarterly (aligned to daily)</td><td>Balance-sheet, income-statement and cash-flow items, standardized</td><td>Wind terminal</td></tr>
+    </table>
+    <p>
+      Sample: CSI 300 constituents, <strong>2016 – 2026</strong>, 627,075 stock-day rows. Financial
+      features are aligned to the trading calendar from each item's disclosure date, so the model
+      can only use information available at prediction time.
+    </p>
+
+    <h2>3. Methodology</h2>
+    <pre>quarterly financials ──► MLP encoder ──────────┐
+                                               ├─► Self-Attention fusion ─► ranking head
+daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise ranking loss)</pre>
+    <p>
+      Two asymmetric encoders are combined by a single-head self-attention block that learns
+      per-sample fusion weights, followed by a linear ranking head. The pairwise ranking objective
+      penalizes the model whenever a lower-ranked stock is predicted above a higher-ranked one,
+      which reduced the tendency of plain regression to chase the magnitude of noisy daily returns.
+    </p>
+    <p>
+      Two runs are trained with identical pipelines as an ablation:
+      <strong>Model-T</strong> (price/volume branch only) and <strong>Model-F</strong> (full fused model).
+      Fusion-layer attention weights are inspected per period to check whether the model shifts
+      between fundamental and technical logic over time.
+    </p>
+
+    <h2>4. Results</h2>
+    <table>
+      <tr><th>Model</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
+      <tr><td>Model-T (price only)</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
+      <tr><td><strong>Model-F (fused)</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
+    </table>
+    <p>
+      Financial information buys a clear improvement in <em>rank</em> quality (+26% IC, +33% RankIC,
+      +49% ICIR) while leaving point-error metrics essentially unchanged. For stock selection,
+      that is the trade-off that matters.
+    </p>
+
+    <figure>
+      <img src="../assets/stock/model_comparison_nav.png" alt="Model comparison" loading="lazy" />
+      <figcaption>Validation metrics and NAV comparison between the price-only and fused models.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="../assets/stock/data_fusion_schematic.png" alt="Data fusion schematic" loading="lazy" />
+      <figcaption>Mixed-frequency fusion: quarterly statements and daily price-volume streams.</figcaption>
+    </figure>
+
+    <h3>Stock selection behaviour</h3>
+    <figure>
+      <img src="../assets/stock/stock_selection_frequency.png" alt="Selection frequency" loading="lazy" />
+      <figcaption>How often individual names are selected by the fused model.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/stock/stock_selection_academic.png" alt="Selection profile" loading="lazy" />
+      <figcaption>Profile of selected names and their scores.</figcaption>
+    </figure>
+
+    <h2>5. Backtest</h2>
+    <p>Daily selection of the top-ranked stock over 1,225 trading days:</p>
+    <table>
+      <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
+      <tr><td>Model-F (fused)</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>118.5%</td></tr>
+      <tr><td>Model-T (price only)</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>37.9%</td></tr>
+      <tr><td>CSI 300 (equal-weight benchmark)</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
+    </table>
+    <p>Top-1 selection diagnostics: win rate <strong>49.3%</strong>, average daily return <strong>0.30%</strong>.</p>
+
+    <figure>
+      <img src="../assets/stock/strategy_performance.png" alt="Strategy performance" loading="lazy" />
+      <figcaption>Strategy metrics versus the benchmark.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/stock/pnl_curve.png" alt="P&L curve" loading="lazy" />
+      <figcaption>Cumulative P&amp;L curve of the top-1 selection strategy.</figcaption>
+    </figure>
+
+    <h2>6. Backtest caveats</h2>
+    <p>These are simulation results, not live performance. Known limitations:</p>
+    <ul>
+      <li>No full market-impact or capacity modelling; a top-1 strategy is not deployable at scale without significant slippage.</li>
+      <li>Single market (CSI 300) and a single historical window; the prediction period covers a specific macro regime.</li>
+      <li>Transaction costs, borrow constraints and limit-up/limit-down frictions are simplified.</li>
+      <li>Standard overfitting risk for any pipeline selected partly on validation metrics.</li>
+    </ul>
+    <p>
+      The honest reading: the backtest is <em>directional evidence</em> that financial features improve
+      the ranking signal — not a claim of 145% annual returns.
+    </p>
+
+    <h2>7. Limitations &amp; next steps</h2>
+    <ul>
+      <li>Industry / size neutralization and incremental IC after neutralization.</li>
+      <li>Walk-forward retraining instead of a single split.</li>
+      <li>Realistic costs and capacity; evaluate a top-N portfolio rather than top-1.</li>
+      <li>Extend the fusion layer to more data frequencies (weekly analyst data, monthly macro).</li>
+    </ul>
+
+    <p class="divider-note" style="margin-top:48px;">© 2026 Yifan Feng · Research portfolio</p>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2026 Yifan Feng</p>
+      <p><a href="../index.html#research">← All research</a></p>
+    </div>
+  </footer>
+</body>
+</html>

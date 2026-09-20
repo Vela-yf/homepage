@@ -109,3 +109,40 @@ section h2 { font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 6px; }
   .hero { padding-top: 64px; }
   .footer-inner { flex-direction: column; gap: 8px; }
 }
+
+/* ---- research report pages ---- */
+.article { max-width: 800px; margin: 0 auto; padding: 56px 24px 72px; }
+.article .back { font-size: 0.9rem; color: var(--muted); }
+.article h1 { font-size: clamp(1.6rem, 3.6vw, 2.3rem); line-height: 1.2; letter-spacing: -0.015em; margin: 22px 0 10px; }
+.article .subtitle { color: var(--muted); font-size: 1.02rem; margin-bottom: 22px; }
+.article h2 { font-size: 1.28rem; margin: 48px 0 14px; padding-top: 26px; border-top: 1px solid var(--border); }
+.article h3 { font-size: 1.05rem; margin: 26px 0 10px; }
+.article p { color: #c6cedd; margin-bottom: 14px; }
+.article ul, .article ol { color: #c6cedd; margin: 0 0 16px 22px; }
+.article li { margin-bottom: 8px; }
+.article strong { color: var(--text); }
+.article a { color: var(--accent); }
+.article .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.article .meta span {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--accent); background: var(--accent-soft); padding: 3px 10px; border-radius: 999px;
+}
+.tldr {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 10px;
+  padding: 18px 22px; margin: 26px 0 8px;
+}
+.tldr p:last-child, .tldr ul:last-child { margin-bottom: 0; }
+.article table { width: 100%; border-collapse: collapse; margin: 18px 0 24px; font-size: 0.9rem; }
+.article th, .article td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+.article th { background: var(--surface); color: var(--text); font-weight: 600; }
+.article td { color: #c6cedd; }
+.article pre {
+  background: #0d1017; border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px 18px; overflow-x: auto; font-size: 0.83rem; line-height: 1.55;
+  margin: 16px 0 22px; color: #aeb9cc;
+}
+.article figure { margin: 22px 0; }
+.article figure img { width: 100%; border-radius: 10px; border: 1px solid var(--border); background: #0d1017; }
+.article figcaption { color: var(--muted); font-size: 0.82rem; margin-top: 8px; }
+.article .divider-note { color: var(--muted); font-size: 0.85rem; }
