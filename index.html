@@ -6,7 +6,7 @@
   <title data-en="Venti — Quantitative Research Portfolio" data-zh="Venti — 量化研究作品集">Venti — Quantitative Research Portfolio</title>
   <meta name="description" content="Quantitative research at the intersection of deep learning, financial data and on-chain market microstructure." />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232f6bff'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
   <script>
   (function () {
     var d = document.documentElement;
@@ -45,7 +45,8 @@
     <section class="hero container">
       <div class="lang-en">
         <p class="eyebrow">Quantitative Research · Deep Learning · On-Chain Data</p>
-        <h1>Turning messy financial data into<br />testable trading signals.</h1>
+        <h1>Venti</h1>
+        <p class="slogan">Turning messy financial data into testable trading signals.</p>
         <p class="lede">
           I build end-to-end quantitative research pipelines — data engineering, factor modeling,
           deep learning and backtesting — and stress-test them for the only thing that matters:
@@ -54,7 +55,8 @@
       </div>
       <div class="lang-zh">
         <p class="eyebrow">量化研究 · 深度学习 · 链上数据</p>
-        <h1>把杂乱的金融数据，<br />变成可检验的交易信号。</h1>
+        <h1>Venti</h1>
+        <p class="slogan">把杂乱的金融数据，变成可检验的交易信号。</p>
         <p class="lede">
           我搭建端到端的量化研究流程——数据处理、因子建模、深度学习与回测，
           并始终追问同一个问题：这条信号能否在实际摩擦下存活。
@@ -79,13 +81,12 @@
             <p class="tags"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span></p>
             <h3>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h3>
             <p>
-              A fusion architecture (MLP for quarterly financials + CNN-LSTM for daily price/volume,
-              combined by self-attention) trained with a pairwise ranking objective on CSI 300 constituents.
+              A mixed-frequency model combining CNN-LSTM price-volume features with MLP-encoded
+              fundamentals via self-attention, trained with a pairwise ranking objective on CSI 300 stocks.
             </p>
             <ul>
-              <li><strong>+26% Mean IC</strong> and <strong>+33% RankIC</strong> from adding fundamentals to a price-only baseline (627k observations)</li>
-              <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark</li>
-              <li>Full ablation, ranking-loss design and honest backtest caveats in the report</li>
+              <li><strong>+25% peak validation RankIC</strong> (0.0268 → 0.0335) from adding fundamentals to a price-only baseline</li>
+              <li>Top-10 portfolio backtest: <strong>69.3% annualized, Sharpe 3.28</strong>, +43.1% annualized excess vs CSI 300 (simulation)</li>
             </ul>
             <p class="card-links"><a href="research/mixed-frequency-stock-prediction.html">Read the full report →</a></p>
           </div>
@@ -93,13 +94,12 @@
             <p class="tags"><span>深度学习</span><span>股票</span><span>PyTorch</span></p>
             <h3>面向横截面股票预测的混频深度学习模型</h3>
             <p>
-              将季度财务报表（MLP 分支）与日频量价数据（CNN-LSTM 分支）通过自注意力机制融合，
-              并以成对排序损失训练，用于沪深 300 成分股的横截面排序预测。
+              将 CNN-LSTM 量价特征与 MLP 编码的财务基本面通过自注意力融合，
+              并以成对排序损失训练，用于沪深 300 股票的横截面排序预测。
             </p>
             <ul>
-              <li>相比纯量价基线，引入财务信息使 <strong>Mean IC 提升约 26%</strong>、<strong>RankIC 提升约 33%</strong>（62.7 万个观测）</li>
-              <li>简化假设下回测年化 <strong>144.7%，夏普 2.98</strong>；等权基准为 26.2% / 1.62</li>
-              <li>报告包含完整消融实验、排序损失设计与诚实的回测局限说明</li>
+              <li>引入财务信息使验证集峰值 <strong>RankIC 提升 25%</strong>（0.0268 → 0.0335）</li>
+              <li>Top-10 组合回测：年化 <strong>69.3%、夏普 3.28</strong>，较沪深 300 年化超额 +43.1%（模拟）</li>
             </ul>
             <p class="card-links"><a href="research/mixed-frequency-stock-prediction.html">阅读完整报告 →</a></p>
           </div>
@@ -115,14 +115,12 @@
             <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span></p>
             <h3>On-Chain MEV Signals for Cryptocurrency Timing</h3>
             <p>
-              Do Ethereum sandwich attacks predict BTC volatility? 3 MEV-native features plus 26
-              technical factors, de-correlated with Jaccard-similarity spectral clustering, backtested
-              with cost sensitivity analysis.
+              A 5-minute BTC/USDT pipeline combining Binance price-volume data with Dune MEV
+              (sandwich attack) features, de-correlated with Jaccard-similarity spectral clustering.
             </p>
             <ul>
-              <li>MEV features show <strong>|IC| 0.10–0.27</strong> and near-orthogonality to classical price factors</li>
-              <li>Strongest channel is <strong>volatility timing</strong>, not direction — MEV measures market fragility</li>
-              <li>Break-even at <strong>~0.23 bp</strong> of fees: a clean demonstration that alpha is execution-bound</li>
+              <li>Directional signal: <strong>52.46% validation accuracy (ROC-AUC 0.5369)</strong>; MEV features are near-orthogonal to price factors</li>
+              <li>Strongest on <strong>volatility magnitude</strong>; zero-friction backtest: <strong>66.4% annualized</strong></li>
             </ul>
             <p class="card-links"><a href="research/onchain-mev-crypto-timing.html">Read the full report →</a></p>
           </div>
@@ -130,13 +128,12 @@
             <p class="tags"><span>加密资产</span><span>链上数据</span><span>市场微观结构</span></p>
             <h3>链上 MEV 信号与加密货币择时</h3>
             <p>
-              以太坊三明治攻击能否预测 BTC 波动？3 个 MEV 原生特征加上 26 个技术因子，
-              以基于 Jaccard 相似的谱聚类去相关，并进行成本敏感性回测。
+              结合 Binance 量价数据与 Dune 链上 MEV（三明治攻击）特征的 5 分钟 BTC/USDT 研究管线，
+              使用基于 Jaccard 相似的谱聚类去相关。
             </p>
             <ul>
-              <li>MEV 特征 <strong>|IC| 0.10–0.27</strong>，且与经典量价因子接近正交</li>
-              <li>最稳健的通道是<strong>波动率择时</strong>而非方向——MEV 度量的是市场脆弱性</li>
-              <li>盈亏平衡费率约 <strong>0.23 bp</strong>：alpha 真实存在，但受限于执行环境</li>
+              <li>方向信号验证准确率 <strong>52.46%（ROC-AUC 0.5369）</strong>，MEV 特征与量价因子接近正交</li>
+              <li>对<strong>波动幅度</strong>预测最强；零摩擦回测年化 <strong>66.4%</strong></li>
             </ul>
             <p class="card-links"><a href="research/onchain-mev-crypto-timing.html">阅读完整报告 →</a></p>
           </div>
@@ -146,15 +143,32 @@
 
     <section id="skills" class="container">
       <h2><span class="lang-en">Toolbox</span><span class="lang-zh">技能栈</span></h2>
-      <div class="chips">
-        <span>Python</span><span>PyTorch</span><span>pandas / NumPy</span><span>scikit-learn</span>
-        <span>vectorbt</span><span>Backtesting</span><span>Factor Research</span><span>IC / Clustering</span>
-        <span>Rust</span><span>Solidity</span><span>Web3 / ethers-rs</span><span>Dune Analytics</span>
-        <span>SQL</span><span>Parquet</span><span>Git</span><span>Cloudflare Pages</span>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <p class="skill-label"><span class="lang-en">AI-Native Development</span><span class="lang-zh">AI 原生化开发</span></p>
+          <div class="chips">
+            <span>Codex / CLI agents</span><span>Prompt iteration</span><span>AI-assisted research</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="skill-label"><span class="lang-en">Programming &amp; Data</span><span class="lang-zh">编程与数据</span></p>
+          <div class="chips">
+            <span>Python (NumPy, pandas, scikit-learn, Hugging Face)</span><span>SQL / SQLite</span>
+            <span>C</span><span>C#</span><span>Redis</span><span>WebSocket</span>
+            <span>Wind</span><span>Binance</span><span>Dune Analytics</span><span>Dash</span><span>Power BI</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="skill-label"><span class="lang-en">Quant &amp; Analytics</span><span class="lang-zh">量化与分析</span></p>
+          <div class="chips">
+            <span>Factor research</span><span>Backtesting</span><span>Statistical analysis</span>
+            <span>Stata</span><span>Excel</span><span>Financial modeling</span><span>Derivatives pricing</span>
+          </div>
+        </div>
       </div>
       <p class="education">
-        <span class="lang-en">BSc, Renmin University of China — Accounting (Business School) &amp; Finance (Gaoli Institute).</span>
-        <span class="lang-zh">中国人民大学 本科 — 会计学（商学院）&amp; 金融学（高礼研究院）。</span>
+        <span class="lang-en">National University of Singapore — Master of Financial Engineering (2026–) · Renmin University of China — FinTech &amp; Accounting (2022–2026).</span>
+        <span class="lang-zh">新加坡国立大学 — 金融工程硕士（2026–）· 中国人民大学 — 金融科技与会计（2022–2026）。</span>
       </p>
     </section>
   </main>

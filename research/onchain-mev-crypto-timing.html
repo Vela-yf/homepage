@@ -6,7 +6,7 @@
   <title data-en="On-Chain MEV Signals for Crypto Timing — Venti" data-zh="链上 MEV 信号与加密货币择时 — Venti">On-Chain MEV Signals for Crypto Timing — Venti</title>
   <meta name="description" content="Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, spectral clustering and cost sensitivity." />
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232f6bff'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
   <script>
   (function () {
     var d = document.documentElement;
@@ -51,14 +51,14 @@
         <li>Designed <strong>3 MEV-native features</strong> capturing on-chain adversarial flow: attack <em>intensity</em>, attacked <em>volume share</em>, and <em>attack efficiency</em>.</li>
         <li>MEV features carry strong standalone information (<strong>|IC| 0.10 – 0.27</strong>) and are close to orthogonal to classical price/volume factors — they describe a part of the market price data does not see.</li>
         <li>Used <strong>Jaccard-similarity spectral clustering</strong> to de-correlate the factor zoo; the strongest channel is <strong>volatility timing</strong>, not direction.</li>
-        <li>Cost analysis is the punchline: a frictionless backtest reached <strong>~180× cumulative excess return</strong>, but the strategy <strong>breaks even at only ~0.23 bp of fees</strong>. The alpha is real but execution-bound.</li>
+        <li>Cost analysis is the punchline: the frictionless backtest reached <strong>+18,571% cumulative (~186×), 66.4% annualized</strong>, but the strategy <strong>breaks even at only ~0.23 bp of fees</strong> and turns sharply negative at 0.5 bp. The alpha is real but execution-bound.</li>
       </ul>
       <ul class="lang-zh">
         <li>构建多源数据集（<strong>2019–2026</strong>）：BTC/USDT 高频量价 + 来自 Dune Analytics 的以太坊<strong>三明治攻击轨迹</strong>。</li>
         <li>设计 <strong>3 个 MEV 原生特征</strong>刻画链上对抗性流量：攻击<em>强度</em>、被攻击<em>成交量占比</em>、<em>攻击效率</em>。</li>
         <li>MEV 特征具有强独立信息量（<strong>|IC| 0.10 – 0.27</strong>），且与经典量价因子接近正交——它们描述的是价格数据看不到的那部分市场。</li>
         <li>采用<strong>基于 Jaccard 相似的谱聚类</strong>对因子去相关；最稳健的通道是<strong>波动率择时</strong>，而非方向预测。</li>
-        <li>成本分析是核心结论：无摩擦回测累计超额约 <strong>180 倍</strong>，但策略在约 <strong>0.23 bp</strong> 的手续费水平即达到盈亏平衡——alpha 真实存在，但受限于执行。</li>
+        <li>成本分析是核心结论：无摩擦回测累计 <strong>+18,571%（约 186 倍）、年化 66.4%</strong>，但在约 <strong>0.23 bp</strong> 费用水平即盈亏平衡，0.5 bp 时大幅转负——alpha 真实存在，但受限于执行。</li>
       </ul>
     </div>
 
@@ -220,12 +220,12 @@ OHLCV ──► 26+ 技术因子 ──┘              │
 
     <h3><span class="lang-en">Direction vs. volatility</span><span class="lang-zh">方向 vs 波动率</span></h3>
     <ul class="lang-en">
-      <li><strong>Direction:</strong> the aggregated signal reached a rank IC of ≈ <strong>0.007</strong> — statistically present but economically thin.</li>
-      <li><strong>Volatility (|return|):</strong> MEV clusters rank among the strongest groups; sandwich activity spikes precede elevated volatility and liquidity stress.</li>
+      <li><strong>Direction:</strong> the signal reached <strong>52.46% validation accuracy (ROC-AUC 0.5369, rank IC ≈ 0.062)</strong> — statistically present but economically thin.</li>
+      <li><strong>Volatility (|return|):</strong> MEV clusters rank among the strongest groups (magnitude rank IC ≈ 0.46); sandwich activity spikes precede elevated volatility and liquidity stress.</li>
     </ul>
     <ul class="lang-zh">
-      <li><strong>方向：</strong> 聚合信号与未来收益的 Rank IC 约 <strong>0.007</strong>——统计上存在，但经济意义有限。</li>
-      <li><strong>波动率（|收益|）：</strong> MEV 聚类是表现最强的组之一；三明治活动激增往往先于波动率抬升与流动性紧张。</li>
+      <li><strong>方向：</strong> 信号验证准确率 <strong>52.46%（ROC-AUC 0.5369，Rank IC ≈ 0.062）</strong>——统计上存在，但经济意义有限。</li>
+      <li><strong>波动率（|收益|）：</strong> MEV 聚类是表现最强的组之一（幅度 Rank IC ≈ 0.46）；三明治活动激增往往先于波动率抬升与流动性紧张。</li>
     </ul>
     <p class="lang-en">This is the economically sensible reading: MEV measures <em>fragility</em>, not <em>direction</em>.</p>
     <p class="lang-zh">这符合经济直觉：MEV 度量的是<em>脆弱性</em>，而非<em>方向</em>。</p>
@@ -233,18 +233,20 @@ OHLCV ──► 26+ 技术因子 ──┘              │
     <h3><span class="lang-en">Cost sensitivity — the real result</span><span class="lang-zh">成本敏感性——真正的结果</span></h3>
     <div class="lang-en">
       <table>
-        <tr><th>Backtest assumption</th><th>Outcome</th></tr>
-        <tr><td>Frictionless</td><td>~<strong>180×</strong> cumulative excess return</td></tr>
-        <tr><td>Realistic fees</td><td>strongly negative (a fee-inclusive run: −95% over ~2,100 trades)</td></tr>
-        <tr><td>Break-even round-trip fee</td><td><strong>≈ 0.23 bp</strong></td></tr>
+        <tr><th>Fee (round-trip)</th><th>Cumulative return</th><th>Annualized</th><th>Sharpe</th><th>Max drawdown</th></tr>
+        <tr><td>0 bp (frictionless)</td><td>+18,571%</td><td><strong>66.4%</strong></td><td>25.9</td><td>−56.4%</td></tr>
+        <tr><td>0.1 bp</td><td>+1,909%</td><td>33.9%</td><td>13.3</td><td>−65.1%</td></tr>
+        <tr><td>0.23 bp (break-even)</td><td>+1.3%</td><td>0.1%</td><td>0.05</td><td>−89.1%</td></tr>
+        <tr><td>0.5 bp</td><td>−99.7%</td><td>−43.8%</td><td>−17.1</td><td>−99.7%</td></tr>
       </table>
     </div>
     <div class="lang-zh">
       <table>
-        <tr><th>回测假设</th><th>结果</th></tr>
-        <tr><td>无摩擦</td><td>累计超额收益约 <strong>180 倍</strong></td></tr>
-        <tr><td>含真实费率</td><td>显著为负（含费运行：约 2,100 笔交易下 −95%）</td></tr>
-        <tr><td>盈亏平衡往返费率</td><td><strong>≈ 0.23 bp</strong></td></tr>
+        <tr><th>往返费率</th><th>累计收益</th><th>年化</th><th>夏普</th><th>最大回撤</th></tr>
+        <tr><td>0 bp（无摩擦）</td><td>+18,571%</td><td><strong>66.4%</strong></td><td>25.9</td><td>−56.4%</td></tr>
+        <tr><td>0.1 bp</td><td>+1,909%</td><td>33.9%</td><td>13.3</td><td>−65.1%</td></tr>
+        <tr><td>0.23 bp（盈亏平衡）</td><td>+1.3%</td><td>0.1%</td><td>0.05</td><td>−89.1%</td></tr>
+        <tr><td>0.5 bp</td><td>−99.7%</td><td>−43.8%</td><td>−17.1</td><td>−99.7%</td></tr>
       </table>
     </div>
     <p class="lang-en">
