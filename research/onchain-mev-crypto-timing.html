@@ -1,79 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>On-Chain MEV Signals for Crypto Timing — Yifan Feng</title>
+  <title data-en="On-Chain MEV Signals for Crypto Timing — Venti" data-zh="链上 MEV 信号与加密货币择时 — Venti">On-Chain MEV Signals for Crypto Timing — Venti</title>
   <meta name="description" content="Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, spectral clustering and cost sensitivity." />
   <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232f6bff'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
+  <script>
+  (function () {
+    var d = document.documentElement;
+    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    var t = get('theme');
+    d.dataset.theme = t || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (get('lang') === 'zh') {
+      d.dataset.lang = 'zh';
+      d.lang = 'zh-CN';
+      var ti = document.querySelector('title');
+      if (ti && ti.dataset.zh) document.title = ti.dataset.zh;
+    }
+  })();
+  </script>
+  <script src="../site.js" defer></script>
 </head>
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="../index.html">Yifan&nbsp;Feng</a>
-      <nav><a href="../index.html#research">Research</a></nav>
+      <a class="brand" href="../index.html">Venti</a>
+      <div class="nav-right">
+        <nav><a href="../index.html#research"><span class="lang-en">Research</span><span class="lang-zh">研究</span></a></nav>
+        <button class="lang-toggle" type="button">中文</button>
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main class="article">
-    <a class="back" href="../index.html#research">← Back to research</a>
-    <h1>On-Chain MEV Signals for Cryptocurrency Timing</h1>
-    <p class="subtitle">Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, with spectral clustering and cost-sensitivity analysis.</p>
-    <p class="meta"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span><span>2019–2026</span></p>
+    <a class="back" href="../index.html#research"><span class="lang-en">← Back to research</span><span class="lang-zh">← 返回研究列表</span></a>
+
+    <h1><span class="lang-en">On-Chain MEV Signals for Cryptocurrency Timing</span><span class="lang-zh">链上 MEV 信号与加密货币择时</span></h1>
+    <p class="subtitle"><span class="lang-en">Do Ethereum MEV flows predict BTC volatility? A factor study on sandwich attacks, with spectral clustering and cost-sensitivity analysis.</span><span class="lang-zh">以太坊 MEV 流能否预测 BTC 波动？围绕三明治攻击的因子研究：谱聚类与成本敏感性分析。</span></p>
+    <p class="meta"><span class="lang-en">Crypto</span><span class="lang-en">On-Chain Data</span><span class="lang-en">Market Microstructure</span><span class="lang-en">2019–2026</span><span class="lang-zh">加密资产</span><span class="lang-zh">链上数据</span><span class="lang-zh">市场微观结构</span><span class="lang-zh">2019–2026</span></p>
 
     <div class="tldr">
-      <ul>
+      <ul class="lang-en">
         <li>Built a multi-source dataset (<strong>2019–2026</strong>): BTC/USDT high-frequency OHLCV plus Ethereum <strong>sandwich-attack traces</strong> extracted from Dune Analytics.</li>
         <li>Designed <strong>3 MEV-native features</strong> capturing on-chain adversarial flow: attack <em>intensity</em>, attacked <em>volume share</em>, and <em>attack efficiency</em>.</li>
         <li>MEV features carry strong standalone information (<strong>|IC| 0.10 – 0.27</strong>) and are close to orthogonal to classical price/volume factors — they describe a part of the market price data does not see.</li>
         <li>Used <strong>Jaccard-similarity spectral clustering</strong> to de-correlate the factor zoo; the strongest channel is <strong>volatility timing</strong>, not direction.</li>
         <li>Cost analysis is the punchline: a frictionless backtest reached <strong>~180× cumulative excess return</strong>, but the strategy <strong>breaks even at only ~0.23 bp of fees</strong>. The alpha is real but execution-bound.</li>
       </ul>
+      <ul class="lang-zh">
+        <li>构建多源数据集（<strong>2019–2026</strong>）：BTC/USDT 高频量价 + 来自 Dune Analytics 的以太坊<strong>三明治攻击轨迹</strong>。</li>
+        <li>设计 <strong>3 个 MEV 原生特征</strong>刻画链上对抗性流量：攻击<em>强度</em>、被攻击<em>成交量占比</em>、<em>攻击效率</em>。</li>
+        <li>MEV 特征具有强独立信息量（<strong>|IC| 0.10 – 0.27</strong>），且与经典量价因子接近正交——它们描述的是价格数据看不到的那部分市场。</li>
+        <li>采用<strong>基于 Jaccard 相似的谱聚类</strong>对因子去相关；最稳健的通道是<strong>波动率择时</strong>，而非方向预测。</li>
+        <li>成本分析是核心结论：无摩擦回测累计超额约 <strong>180 倍</strong>，但策略在约 <strong>0.23 bp</strong> 的手续费水平即达到盈亏平衡——alpha 真实存在，但受限于执行。</li>
+      </ul>
     </div>
 
-    <h2>1. Motivation</h2>
-    <p>
+    <h2><span class="lang-en">1. Motivation</span><span class="lang-zh">1. 研究动机</span></h2>
+    <p class="lang-en">
       MEV (Maximal Extractable Value) is the profit extracted by reordering, inserting or censoring
       transactions within a block. Sandwich attacks — buying before a victim's swap and selling right
       after — are its most visible form, and they are <strong>on-chain observable</strong>: every attack is a
       public sequence of swaps.
     </p>
-    <p>That makes MEV data an unusual signal source:</p>
-    <ul>
+    <p class="lang-zh">
+      MEV（最大可提取价值）是通过在区块内重排、插入或审查交易而获得的利润。三明治攻击——在受害者交易前买入、之后卖出——
+      是其最典型的形式，而且是<strong>链上可观测</strong>的：每次攻击都是一串公开的 swap 序列。
+    </p>
+    <p class="lang-en">That makes MEV data an unusual signal source:</p>
+    <p class="lang-zh">这让 MEV 数据成为不寻常的信号源：</p>
+    <ul class="lang-en">
       <li>It measures <strong>adversarial, informed flow</strong> rather than aggregate volume.</li>
       <li>It behaves like a <strong>stress indicator</strong>: attacks cluster around liquidity fragmentation, high volatility and retail order-flow imbalance.</li>
       <li>It is <strong>structurally different</strong> from exchange OHLCV data — a candidate orthogonal alpha source, especially for volatility rather than direction.</li>
     </ul>
-    <p>The question this study asks: can on-chain MEV activity be turned into tradable timing signals for BTC, and what does execution cost do to them?</p>
+    <ul class="lang-zh">
+      <li>它度量的是<strong>对抗性的、知情的流量</strong>，而非总量。</li>
+      <li>它近似一种<strong>压力指标</strong>：攻击聚集在流动性碎片化、高波动与散户订单流失衡的时段。</li>
+      <li>它与交易所 OHLCV 数据<strong>结构上不同</strong>——是潜在的正交 alpha 来源，尤其适合波动率而非方向。</li>
+    </ul>
+    <p class="lang-en">The question this study asks: can on-chain MEV activity be turned into tradable timing signals for BTC, and what does execution cost do to them?</p>
+    <p class="lang-zh">本研究的问题：链上 MEV 活动能否转化为可交易的 BTC 择时信号？执行成本对其影响有多大？</p>
 
-    <h2>2. Data</h2>
-    <table>
-      <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
-      <tr><td>Price / volume</td><td>High-frequency bars</td><td>BTC/USDT OHLCV</td><td>Centralized exchange data</td></tr>
-      <tr><td>On-chain MEV</td><td>Event-level</td><td>Sandwich attacks, victim/attacker amounts, fees, transaction traces</td><td>Dune Analytics</td></tr>
-    </table>
-    <p>
+    <h2><span class="lang-en">2. Data</span><span class="lang-zh">2. 数据</span></h2>
+    <div class="lang-en">
+      <table>
+        <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
+        <tr><td>Price / volume</td><td>High-frequency bars</td><td>BTC/USDT OHLCV</td><td>Centralized exchange data</td></tr>
+        <tr><td>On-chain MEV</td><td>Event-level</td><td>Sandwich attacks, victim/attacker amounts, fees, transaction traces</td><td>Dune Analytics</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>数据块</th><th>频率</th><th>内容</th><th>来源</th></tr>
+        <tr><td>价格 / 成交量</td><td>高频 bar</td><td>BTC/USDT OHLCV</td><td>中心化交易所数据</td></tr>
+        <tr><td>链上 MEV</td><td>事件级</td><td>三明治攻击、受害者/攻击者金额、费用、交易轨迹</td><td>Dune Analytics</td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
       Coverage: <strong>2019-01 – 2026-01</strong> (2,584 days in the labeled dataset), with
       745,326 aligned observations across the factor panel.
     </p>
+    <p class="lang-zh">
+      覆盖范围：<strong>2019-01 – 2026-01</strong>（标注数据集共 2,584 天），因子面板对齐后共 745,326 条观测。
+    </p>
 
-    <h2>3. MEV-native features</h2>
-    <table>
-      <tr><th>Feature</th><th>Definition</th><th>Economic reading</th></tr>
-      <tr><td><code>f_sandwich_intensity_z</code></td><td>Sandwiched transactions per unit time, standardized</td><td>Frequency of adversarial intervention</td></tr>
-      <tr><td><code>f_mev_vol_share_z</code></td><td>Attacked volume / total volume</td><td>How much flow is being exploited</td></tr>
-      <tr><td><code>f_attack_eff_z</code></td><td>Victim volume / attacker volume</td><td>Profitability of attacks = market vulnerability</td></tr>
-    </table>
-    <p>
+    <h2><span class="lang-en">3. MEV-native features</span><span class="lang-zh">3. MEV 原生特征</span></h2>
+    <div class="lang-en">
+      <table>
+        <tr><th>Feature</th><th>Definition</th><th>Economic reading</th></tr>
+        <tr><td><code>f_sandwich_intensity_z</code></td><td>Sandwiched transactions per unit time, standardized</td><td>Frequency of adversarial intervention</td></tr>
+        <tr><td><code>f_mev_vol_share_z</code></td><td>Attacked volume / total volume</td><td>How much flow is being exploited</td></tr>
+        <tr><td><code>f_attack_eff_z</code></td><td>Victim volume / attacker volume</td><td>Profitability of attacks = market vulnerability</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>特征</th><th>定义</th><th>经济含义</th></tr>
+        <tr><td><code>f_sandwich_intensity_z</code></td><td>单位时间被三明治夹击的交易数（标准化）</td><td>对抗性干预的频率</td></tr>
+        <tr><td><code>f_mev_vol_share_z</code></td><td>被攻击成交量 / 总成交量</td><td>流量被榨取的程度</td></tr>
+        <tr><td><code>f_attack_eff_z</code></td><td>受害者量 / 攻击者量</td><td>攻击的盈利能力 = 市场的脆弱程度</td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
       Plus <strong>26+ classical technical factors</strong> (momentum, mean-reversion, volume/liquidity,
       volatility, intraday structure, Alpha101-style) implemented on top of <code>vectorbt</code>: ROC,
       MA deviation, MACD, TSI, Bollinger width/%B, CCI, distance-to-high/low, KDJ, OBV, VWAP
       deviation, CMF, volume surge, MFI, ATR, Garman-Klass volatility, realized vol, high-low spread,
       skew/kurtosis, bar structure, price-volume correlation, time-series volume rank and more.
     </p>
+    <p class="lang-zh">
+      此外还有 <strong>26+ 个经典技术因子</strong>（动量、均值回复、成交量/流动性、波动率、日内结构、Alpha101 风格），
+      基于 <code>vectorbt</code> 实现：ROC、MA 偏离、MACD、TSI、布林带宽度/%B、CCI、距高低点距离、KDJ、OBV、
+      VWAP 偏离、CMF、成交量激增、MFI、ATR、Garman-Klass 波动率、已实现波动率、高低价差、偏度/峰度、
+      bar 结构、价量相关、成交量时序排名等。
+    </p>
 
-    <h2>4. Methodology</h2>
-    <pre>Dune extraction ──► MEV features ─┐
+    <h2><span class="lang-en">4. Methodology</span><span class="lang-zh">4. 方法</span></h2>
+    <pre class="lang-en">Dune extraction ──► MEV features ─┐
                                   ├─► IC screen (Spearman) ──► correlation pruning
 OHLCV ──► 26+ tech factors ───────┘              │
                                                  ▼
@@ -85,76 +155,134 @@ OHLCV ──► 26+ tech factors ───────┘              │
                         └────────────────────────┬───────────────────────┘
                                                  ▼
                                        signal backtests (vectorbt)</pre>
-    <ol>
+    <pre class="lang-zh">Dune 提取 ──► MEV 特征 ──┐
+                        ├─► IC 筛选（Spearman）──► 相关性剪枝
+OHLCV ──► 26+ 技术因子 ──┘              │
+                                        ▼
+                    基于 Jaccard 相似的谱聚类
+                                        │
+                  ┌─────────────────────┴─────────────────────┐
+                  ▼                                           ▼
+            方向预测（收益率符号）                 波动率预测（|收益率|）
+                  └─────────────────────┬─────────────────────┘
+                                        ▼
+                              信号回测（vectorbt）</pre>
+    <ol class="lang-en">
       <li><strong>IC screening.</strong> Rank-IC (Spearman) of every factor against forward returns; MEV features are also tested against |returns| to capture the volatility channel.</li>
       <li><strong>De-correlation.</strong> Factors are pruned on pairwise correlation, then clustered by <strong>spectral clustering on a Jaccard similarity matrix</strong>, so each cluster carries one theme (momentum, liquidity, volatility, MEV, …).</li>
       <li><strong>Group tests.</strong> Cluster representatives are tested on direction and absolute-return targets, producing 60 quantile / IC charts.</li>
       <li><strong>Signal construction &amp; cost sensitivity.</strong> Cluster signals are combined and backtested, sweeping fee assumptions to locate the break-even.</li>
     </ol>
+    <ol class="lang-zh">
+      <li><strong>IC 筛选。</strong> 对每个因子计算对未来收益的 Rank IC（Spearman）；MEV 特征同时对 |收益| 检验以捕捉波动率通道。</li>
+      <li><strong>去相关。</strong> 先按两两相关性剪枝，再在 <strong>Jaccard 相似矩阵上做谱聚类</strong>，使每个聚类对应一个主题（动量、流动性、波动率、MEV……）。</li>
+      <li><strong>分组测试。</strong> 以聚类代表因子分别在方向与绝对收益目标上测试，产出 60 张分位 / IC 图。</li>
+      <li><strong>信号构建与成本敏感性。</strong> 合成各聚类信号并进行回测，扫描费率假设以定位盈亏平衡点。</li>
+    </ol>
 
-    <h2>5. Results</h2>
-    <h3>MEV features vs. classical factors (standalone IC)</h3>
-    <table>
-      <tr><th>Factor</th><th>Target</th><th>IC (Spearman)</th></tr>
-      <tr><td><code>f_sandwich_intensity_z</code></td><td>forward return</td><td><strong>+0.104</strong></td></tr>
-      <tr><td><code>f_mev_vol_share_z</code></td><td>forward return</td><td><strong>−0.273</strong></td></tr>
-      <tr><td><code>f_attack_eff_z</code></td><td>forward return</td><td><strong>−0.186</strong></td></tr>
-      <tr><td>most technical factors (ROC / CCI / MA-dev, …)</td><td>forward return</td><td>≈ −0.006 … +0.006</td></tr>
-    </table>
-    <p><strong>Magnitude.</strong> MEV features are an order of magnitude more informative than typical technical factors on this sample — with the caveat that these are measured on the full sample, so they are screening evidence, not out-of-sample performance.</p>
-    <p><strong>Orthogonality.</strong> Correlation with price/volume factors is low, so MEV features survive pruning and clustering as a distinct theme rather than a proxy for volatility.</p>
+    <h2><span class="lang-en">5. Results</span><span class="lang-zh">5. 结果</span></h2>
+    <h3><span class="lang-en">MEV features vs. classical factors (standalone IC)</span><span class="lang-zh">MEV 特征 vs 经典因子（独立 IC）</span></h3>
+    <div class="lang-en">
+      <table>
+        <tr><th>Factor</th><th>Target</th><th>IC (Spearman)</th></tr>
+        <tr><td><code>f_sandwich_intensity_z</code></td><td>forward return</td><td><strong>+0.104</strong></td></tr>
+        <tr><td><code>f_mev_vol_share_z</code></td><td>forward return</td><td><strong>−0.273</strong></td></tr>
+        <tr><td><code>f_attack_eff_z</code></td><td>forward return</td><td><strong>−0.186</strong></td></tr>
+        <tr><td>most technical factors (ROC / CCI / MA-dev, …)</td><td>forward return</td><td>≈ −0.006 … +0.006</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>因子</th><th>目标</th><th>IC（Spearman）</th></tr>
+        <tr><td><code>f_sandwich_intensity_z</code></td><td>未来收益</td><td><strong>+0.104</strong></td></tr>
+        <tr><td><code>f_mev_vol_share_z</code></td><td>未来收益</td><td><strong>−0.273</strong></td></tr>
+        <tr><td><code>f_attack_eff_z</code></td><td>未来收益</td><td><strong>−0.186</strong></td></tr>
+        <tr><td>多数技术因子（ROC / CCI / MA 偏离等）</td><td>未来收益</td><td>≈ −0.006 … +0.006</td></tr>
+      </table>
+    </div>
+    <p class="lang-en"><strong>Magnitude.</strong> MEV features are an order of magnitude more informative than typical technical factors on this sample — with the caveat that these are measured on the full sample, so they are screening evidence, not out-of-sample performance.</p>
+    <p class="lang-zh"><strong>量级。</strong> MEV 特征在本样本中比典型技术因子高出一个数量级的信息量——需要说明的是，这些数值在全样本上测得，属于筛选证据而非样本外表现。</p>
+    <p class="lang-en"><strong>Orthogonality.</strong> Correlation with price/volume factors is low, so MEV features survive pruning and clustering as a distinct theme rather than a proxy for volatility.</p>
+    <p class="lang-zh"><strong>正交性。</strong> 与量价因子的相关性低，因此 MEV 特征在去相关与聚类中作为独立主题保留下来，而不是波动率的代理变量。</p>
 
     <figure>
       <img src="../assets/mev/f_sandwich_intensity_z.png" alt="Sandwich intensity factor chart" loading="lazy" />
-      <figcaption>Sandwich intensity: quantile behaviour and IC profile.</figcaption>
+      <figcaption><span class="lang-en">Sandwich intensity: quantile behaviour and IC profile.</span><span class="lang-zh">三明治强度：分位表现与 IC 画像。</span></figcaption>
     </figure>
     <figure>
       <img src="../assets/mev/f_mev_vol_share_z.png" alt="MEV volume share factor chart" loading="lazy" />
-      <figcaption>MEV-attacked volume share — the strongest standalone MEV signal.</figcaption>
+      <figcaption><span class="lang-en">MEV-attacked volume share — the strongest standalone MEV signal.</span><span class="lang-zh">被三明治攻击的成交量占比——最强的独立 MEV 信号。</span></figcaption>
     </figure>
     <figure>
       <img src="../assets/mev/f_attack_eff_z.png" alt="Attack efficiency factor chart" loading="lazy" />
-      <figcaption>Attack efficiency (victim / attacker volume).</figcaption>
+      <figcaption><span class="lang-en">Attack efficiency (victim / attacker volume).</span><span class="lang-zh">攻击效率（受害者量 / 攻击者量）。</span></figcaption>
     </figure>
 
-    <h3>Direction vs. volatility</h3>
-    <ul>
+    <h3><span class="lang-en">Direction vs. volatility</span><span class="lang-zh">方向 vs 波动率</span></h3>
+    <ul class="lang-en">
       <li><strong>Direction:</strong> the aggregated signal reached a rank IC of ≈ <strong>0.007</strong> — statistically present but economically thin.</li>
       <li><strong>Volatility (|return|):</strong> MEV clusters rank among the strongest groups; sandwich activity spikes precede elevated volatility and liquidity stress.</li>
     </ul>
-    <p>This is the economically sensible reading: MEV measures <em>fragility</em>, not <em>direction</em>.</p>
+    <ul class="lang-zh">
+      <li><strong>方向：</strong> 聚合信号与未来收益的 Rank IC 约 <strong>0.007</strong>——统计上存在，但经济意义有限。</li>
+      <li><strong>波动率（|收益|）：</strong> MEV 聚类是表现最强的组之一；三明治活动激增往往先于波动率抬升与流动性紧张。</li>
+    </ul>
+    <p class="lang-en">This is the economically sensible reading: MEV measures <em>fragility</em>, not <em>direction</em>.</p>
+    <p class="lang-zh">这符合经济直觉：MEV 度量的是<em>脆弱性</em>，而非<em>方向</em>。</p>
 
-    <h3>Cost sensitivity — the real result</h3>
-    <table>
-      <tr><th>Backtest assumption</th><th>Outcome</th></tr>
-      <tr><td>Frictionless</td><td>~<strong>180×</strong> cumulative excess return</td></tr>
-      <tr><td>Realistic fees</td><td>strongly negative (a fee-inclusive run: −95% over ~2,100 trades)</td></tr>
-      <tr><td>Break-even round-trip fee</td><td><strong>≈ 0.23 bp</strong></td></tr>
-    </table>
-    <p>
+    <h3><span class="lang-en">Cost sensitivity — the real result</span><span class="lang-zh">成本敏感性——真正的结果</span></h3>
+    <div class="lang-en">
+      <table>
+        <tr><th>Backtest assumption</th><th>Outcome</th></tr>
+        <tr><td>Frictionless</td><td>~<strong>180×</strong> cumulative excess return</td></tr>
+        <tr><td>Realistic fees</td><td>strongly negative (a fee-inclusive run: −95% over ~2,100 trades)</td></tr>
+        <tr><td>Break-even round-trip fee</td><td><strong>≈ 0.23 bp</strong></td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>回测假设</th><th>结果</th></tr>
+        <tr><td>无摩擦</td><td>累计超额收益约 <strong>180 倍</strong></td></tr>
+        <tr><td>含真实费率</td><td>显著为负（含费运行：约 2,100 笔交易下 −95%）</td></tr>
+        <tr><td>盈亏平衡往返费率</td><td><strong>≈ 0.23 bp</strong></td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
       The practical finding: the signal can be strong and still not survive retail cost structures.
       This strategy class is viable only with <strong>top-tier execution</strong> — colocated infrastructure,
       maker rebates, fee tiering. The research therefore ships an execution layer as well: a Rust
       MEV bot for pending-transaction monitoring and Uniswap-V2 pricing math, used to observe and
       prototype sandwich execution.
     </p>
+    <p class="lang-zh">
+      实践结论：信号即使很强，也未必能承受零售级成本结构。这类策略只有在<strong>顶级执行环境</strong>下才可能成立——
+      共址部署、maker 返佣、费率分级。因此本研究同时实现了执行层：用于监控 pending 交易与 Uniswap-V2 定价的
+      Rust MEV bot，以便观察与原型化三明治执行。
+    </p>
 
-    <h2>6. Limitations</h2>
-    <ul>
+    <h2><span class="lang-en">6. Limitations</span><span class="lang-zh">6. 局限</span></h2>
+    <ul class="lang-en">
       <li>IC values for MEV features are measured on the full sample; the honest next step is walk-forward evaluation.</li>
       <li>BTC/USDT is the only traded asset; cross-asset robustness is untested.</li>
       <li>A break-even fee of ~0.23 bp means the strategy is effectively unreachable for most participants — the main practical conclusion.</li>
       <li>MEV features rely on Dune-indexed data; availability and latency are not guaranteed at live trading horizons.</li>
     </ul>
-    <p class="divider-note">This work is for research and educational purposes only and is not investment advice.</p>
+    <ul class="lang-zh">
+      <li>MEV 特征的 IC 在全样本上测得；更严谨的下一步是滚动窗口（walk-forward）评估。</li>
+      <li>仅交易 BTC/USDT，跨资产稳健性未验证。</li>
+      <li>约 0.23 bp 的盈亏平衡费率意味着该策略对多数参与者实际不可达——这是最重要的实践结论。</li>
+      <li>MEV 特征依赖 Dune 索引数据；在实盘时间尺度上的可用性与延迟没有保证。</li>
+    </ul>
+    <p class="divider-note lang-en">This work is for research and educational purposes only and is not investment advice.</p>
+    <p class="divider-note lang-zh">本研究仅用于研究与教育目的，不构成任何投资建议。</p>
 
-    <p class="divider-note" style="margin-top:48px;">© 2026 Yifan Feng · Research portfolio</p>
+    <p class="divider-note" style="margin-top:48px;">© 2026 Venti · <span class="lang-en">Research portfolio</span><span class="lang-zh">研究作品集</span></p>
   </main>
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p>© 2026 Yifan Feng</p>
-      <p><a href="../index.html#research">← All research</a></p>
+      <p>© 2026 Venti</p>
+      <p><a href="../index.html#research"><span class="lang-en">← All research</span><span class="lang-zh">← 全部研究</span></a></p>
     </div>
   </footer>
 </body>

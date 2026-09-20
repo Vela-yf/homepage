@@ -1,162 +1,275 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mixed-Frequency Deep Learning for Stock Prediction — Yifan Feng</title>
+  <title data-en="Mixed-Frequency Deep Learning for Stock Prediction — Venti" data-zh="混频深度学习与横截面股票预测 — Venti">Mixed-Frequency Deep Learning for Stock Prediction — Venti</title>
   <meta name="description" content="Do financial statements still add alpha beyond price and volume? A mixed-frequency deep learning study on CSI 300 constituents." />
   <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232f6bff'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
+  <script>
+  (function () {
+    var d = document.documentElement;
+    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    var t = get('theme');
+    d.dataset.theme = t || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (get('lang') === 'zh') {
+      d.dataset.lang = 'zh';
+      d.lang = 'zh-CN';
+      var ti = document.querySelector('title');
+      if (ti && ti.dataset.zh) document.title = ti.dataset.zh;
+    }
+  })();
+  </script>
+  <script src="../site.js" defer></script>
 </head>
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="../index.html">Yifan&nbsp;Feng</a>
-      <nav><a href="../index.html#research">Research</a></nav>
+      <a class="brand" href="../index.html">Venti</a>
+      <div class="nav-right">
+        <nav><a href="../index.html#research"><span class="lang-en">Research</span><span class="lang-zh">研究</span></a></nav>
+        <button class="lang-toggle" type="button">中文</button>
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main class="article">
-    <a class="back" href="../index.html#research">← Back to research</a>
-    <h1>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h1>
-    <p class="subtitle">Do financial statements still add alpha beyond price and volume? An empirical study on CSI 300 constituents.</p>
-    <p class="meta"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span><span>627k observations</span><span>1,225-day backtest</span></p>
+    <a class="back" href="../index.html#research"><span class="lang-en">← Back to research</span><span class="lang-zh">← 返回研究列表</span></a>
+
+    <h1><span class="lang-en">Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</span><span class="lang-zh">混频深度学习与横截面股票预测</span></h1>
+    <p class="subtitle"><span class="lang-en">Do financial statements still add alpha beyond price and volume? An empirical study on CSI 300 constituents.</span><span class="lang-zh">财务信息是否仍能在量价数据之外贡献增量 alpha？基于沪深 300 成分股的实证研究。</span></p>
+    <p class="meta"><span class="lang-en">Deep Learning</span><span class="lang-en">Equities</span><span class="lang-en">PyTorch</span><span class="lang-en">627k observations</span><span class="lang-en">1,225-day backtest</span><span class="lang-zh">深度学习</span><span class="lang-zh">股票</span><span class="lang-zh">PyTorch</span><span class="lang-zh">62.7 万观测</span><span class="lang-zh">1,225 日回测</span></p>
 
     <div class="tldr">
-      <ul>
+      <ul class="lang-en">
         <li>Built a <strong>mixed-frequency deep learning</strong> pipeline combining <strong>quarterly financial statement data</strong> (MLP branch) with <strong>daily price/volume data</strong> (CNN-LSTM branch), fused by a <strong>self-attention</strong> layer.</li>
         <li>Trained with a <strong>pairwise ranking loss</strong> so the model optimizes the cross-sectional ranking of stocks — the objective that actually matters for selection — instead of pointwise return regression.</li>
         <li>Adding financial features improved cross-sectional <strong>Mean IC by ~26%</strong> (0.0073 → 0.0092) and <strong>RankIC by ~33%</strong> (0.0050 → 0.0067); ICIR rose from 0.11 to 0.16.</li>
         <li>Over 1,225 trading days the fused model achieved <strong>+144.7% annualized (Sharpe 2.98)</strong> in simulation versus <strong>+26.2% (Sharpe 1.62)</strong> for the equal-weighted CSI 300 benchmark — under simplified assumptions described below.</li>
       </ul>
+      <ul class="lang-zh">
+        <li>构建了<strong>混频深度学习</strong>流程：将<strong>季度财务数据</strong>（MLP 分支）与<strong>日频量价数据</strong>（CNN-LSTM 分支）通过<strong>自注意力</strong>层融合。</li>
+        <li>采用<strong>成对排序损失</strong>训练，直接优化股票的横截面排序——这才是选股真正需要的目标，而非逐点收益率回归。</li>
+        <li>引入财务特征后，横截面 <strong>Mean IC 提升约 26%</strong>（0.0073 → 0.0092），<strong>RankIC 提升约 33%</strong>（0.0050 → 0.0067），ICIR 从 0.11 升至 0.16。</li>
+        <li>在 1,225 个交易日的模拟中，融合模型年化 <strong>+144.7%（夏普 2.98）</strong>，等权沪深 300 基准为 <strong>+26.2%（夏普 1.62）</strong>——以上基于下文所述简化假设。</li>
+      </ul>
     </div>
 
-    <h2>1. Motivation</h2>
-    <p>
+    <h2><span class="lang-en">1. Motivation</span><span class="lang-zh">1. 研究动机</span></h2>
+    <p class="lang-en">
       Most daily-frequency stock-selection models are trained only on price/volume data. Accounting
       fundamentals move slowly — they are updated quarterly — but they remain the primary channel
       through which firm value is communicated to the market.
     </p>
-    <p>
+    <p class="lang-zh">
+      多数日频选股模型仅使用量价数据训练。会计基本面变化缓慢——按季度更新——但仍然是市场理解公司价值的主要渠道。
+    </p>
+    <p class="lang-en">
       This study asks a narrow, practical question: <strong>when market and fundamental data have
       different sampling frequencies, does a deep model with an explicit fusion mechanism extract
       incremental predictive power from financial statements?</strong>
     </p>
-    <table>
-      <tr><th>Design choice</th><th>Why</th></tr>
-      <tr><td>Separate MLP branch for quarterly financials</td><td>Fundamentals are tabular, low-frequency and smooth — a different inductive bias from price series</td></tr>
-      <tr><td>CNN-LSTM branch for daily OHLCV</td><td>CNN captures local price-volume structure; LSTM captures longer temporal dependence</td></tr>
-      <tr><td>Self-attention at the fusion layer</td><td>Lets the model dynamically re-weight fundamental vs. technical signals as the regime changes</td></tr>
-      <tr><td>Pairwise ranking loss</td><td>Portfolio construction only needs the <em>order</em> of predicted returns, not their level</td></tr>
-    </table>
+    <p class="lang-zh">
+      本研究提出一个具体的问题：<strong>当市场数据与基本面数据具有不同采样频率时，带有显式融合机制的深度模型能否从财务报表中提取增量预测能力？</strong>
+    </p>
 
-    <h2>2. Data</h2>
-    <table>
-      <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
-      <tr><td>Price / volume</td><td>Daily</td><td>OHLCV and derived technical inputs for CSI 300 constituents</td><td>Wind terminal</td></tr>
-      <tr><td>Financial statements</td><td>Quarterly (aligned to daily)</td><td>Balance-sheet, income-statement and cash-flow items, standardized</td><td>Wind terminal</td></tr>
-    </table>
-    <p>
+    <div class="lang-en">
+      <table>
+        <tr><th>Design choice</th><th>Why</th></tr>
+        <tr><td>Separate MLP branch for quarterly financials</td><td>Fundamentals are tabular, low-frequency and smooth — a different inductive bias from price series</td></tr>
+        <tr><td>CNN-LSTM branch for daily OHLCV</td><td>CNN captures local price-volume structure; LSTM captures longer temporal dependence</td></tr>
+        <tr><td>Self-attention at the fusion layer</td><td>Lets the model dynamically re-weight fundamental vs. technical signals as the regime changes</td></tr>
+        <tr><td>Pairwise ranking loss</td><td>Portfolio construction only needs the <em>order</em> of predicted returns, not their level</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>设计选择</th><th>原因</th></tr>
+        <tr><td>季度财务走独立 MLP 分支</td><td>基本面是表格型、低频、平滑的数据，与价格序列的归纳偏置不同</td></tr>
+        <tr><td>日频 OHLCV 走 CNN-LSTM 分支</td><td>CNN 捕捉局部量价结构，LSTM 捕捉更长的时间依赖</td></tr>
+        <tr><td>融合层使用自注意力</td><td>让模型随市场状态动态调整基本面与技术面信号的权重</td></tr>
+        <tr><td>成对排序损失</td><td>组合构建只需要预测收益的<em>排序</em>，而非绝对水平</td></tr>
+      </table>
+    </div>
+
+    <h2><span class="lang-en">2. Data</span><span class="lang-zh">2. 数据</span></h2>
+    <div class="lang-en">
+      <table>
+        <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
+        <tr><td>Price / volume</td><td>Daily</td><td>OHLCV and derived technical inputs for CSI 300 constituents</td><td>Wind terminal</td></tr>
+        <tr><td>Financial statements</td><td>Quarterly (aligned to daily)</td><td>Balance-sheet, income-statement and cash-flow items, standardized</td><td>Wind terminal</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>数据块</th><th>频率</th><th>内容</th><th>来源</th></tr>
+        <tr><td>价格 / 成交量</td><td>日频</td><td>沪深 300 成分股 OHLCV 及衍生技术指标</td><td>Wind 终端</td></tr>
+        <tr><td>财务报表</td><td>季度（对齐至日频）</td><td>资产负债表、利润表、现金流量表科目，已标准化</td><td>Wind 终端</td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
       Sample: CSI 300 constituents, <strong>2016 – 2026</strong>, 627,075 stock-day rows. Financial
       features are aligned to the trading calendar from each item's disclosure date, so the model
       can only use information available at prediction time.
     </p>
+    <p class="lang-zh">
+      样本：沪深 300 成分股，<strong>2016 – 2026</strong>，共 627,075 条股票-日观测。财务特征按披露日期对齐至交易日历，
+      确保模型仅使用预测时点可得的信息。
+    </p>
 
-    <h2>3. Methodology</h2>
-    <pre>quarterly financials ──► MLP encoder ──────────┐
+    <h2><span class="lang-en">3. Methodology</span><span class="lang-zh">3. 方法</span></h2>
+    <pre class="lang-en">quarterly financials ──► MLP encoder ──────────┐
                                                ├─► Self-Attention fusion ─► ranking head
 daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise ranking loss)</pre>
-    <p>
+    <pre class="lang-zh">季度财务报表 ──► MLP 编码器 ────────────┐
+                                       ├─► 自注意力融合 ─► 排序输出头
+日频量价数据 ──► CNN（局部）─► LSTM（时序）┘      （成对排序损失）</pre>
+    <p class="lang-en">
       Two asymmetric encoders are combined by a single-head self-attention block that learns
       per-sample fusion weights, followed by a linear ranking head. The pairwise ranking objective
       penalizes the model whenever a lower-ranked stock is predicted above a higher-ranked one,
       which reduced the tendency of plain regression to chase the magnitude of noisy daily returns.
     </p>
-    <p>
+    <p class="lang-zh">
+      两个非对称编码器由单头自注意力块融合，学习每个样本的融合权重，后接线性排序头。
+      成对排序目标在市场把低排序股票预测得高于高排序股票时施加惩罚，抑制了普通回归追逐噪声日收益量级的问题。
+    </p>
+    <p class="lang-en">
       Two runs are trained with identical pipelines as an ablation:
       <strong>Model-T</strong> (price/volume branch only) and <strong>Model-F</strong> (full fused model).
       Fusion-layer attention weights are inspected per period to check whether the model shifts
       between fundamental and technical logic over time.
     </p>
+    <p class="lang-zh">
+      以完全相同的流程训练两个模型作为消融：<strong>Model-T</strong>（仅量价分支）与 <strong>Model-F</strong>（完整融合模型）。
+      我们会按时期检查融合层注意力权重，观察模型是否在市场环境变化时在基本面与技术面逻辑之间切换。
+    </p>
 
-    <h2>4. Results</h2>
-    <table>
-      <tr><th>Model</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
-      <tr><td>Model-T (price only)</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
-      <tr><td><strong>Model-F (fused)</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
-    </table>
-    <p>
+    <h2><span class="lang-en">4. Results</span><span class="lang-zh">4. 结果</span></h2>
+    <div class="lang-en">
+      <table>
+        <tr><th>Model</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
+        <tr><td>Model-T (price only)</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
+        <tr><td><strong>Model-F (fused)</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>模型</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
+        <tr><td>Model-T（仅量价）</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
+        <tr><td><strong>Model-F（融合）</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
       Financial information buys a clear improvement in <em>rank</em> quality (+26% IC, +33% RankIC,
       +49% ICIR) while leaving point-error metrics essentially unchanged. For stock selection,
       that is the trade-off that matters.
     </p>
+    <p class="lang-zh">
+      财务信息带来的是<em>排序</em>质量的明确提升（IC +26%，RankIC +33%，ICIR +49%），而逐点误差指标基本不变。
+      对选股而言，这正是最重要的权衡。
+    </p>
 
     <figure>
       <img src="../assets/stock/model_comparison_nav.png" alt="Model comparison" loading="lazy" />
-      <figcaption>Validation metrics and NAV comparison between the price-only and fused models.</figcaption>
+      <figcaption><span class="lang-en">Validation metrics and NAV comparison between the price-only and fused models.</span><span class="lang-zh">纯量价模型与融合模型的验证指标与净值对比。</span></figcaption>
     </figure>
 
     <figure>
       <img src="../assets/stock/data_fusion_schematic.png" alt="Data fusion schematic" loading="lazy" />
-      <figcaption>Mixed-frequency fusion: quarterly statements and daily price-volume streams.</figcaption>
+      <figcaption><span class="lang-en">Mixed-frequency fusion: quarterly statements and daily price-volume streams.</span><span class="lang-zh">混频融合：季度报表流与日频量价流。</span></figcaption>
     </figure>
 
-    <h3>Stock selection behaviour</h3>
+    <h3><span class="lang-en">Stock selection behaviour</span><span class="lang-zh">选股行为</span></h3>
     <figure>
       <img src="../assets/stock/stock_selection_frequency.png" alt="Selection frequency" loading="lazy" />
-      <figcaption>How often individual names are selected by the fused model.</figcaption>
+      <figcaption><span class="lang-en">How often individual names are selected by the fused model.</span><span class="lang-zh">各股票被融合模型选中的频率。</span></figcaption>
     </figure>
     <figure>
       <img src="../assets/stock/stock_selection_academic.png" alt="Selection profile" loading="lazy" />
-      <figcaption>Profile of selected names and their scores.</figcaption>
+      <figcaption><span class="lang-en">Profile of selected names and their scores.</span><span class="lang-zh">被选中股票的画像与得分分布。</span></figcaption>
     </figure>
 
-    <h2>5. Backtest</h2>
-    <p>Daily selection of the top-ranked stock over 1,225 trading days:</p>
-    <table>
-      <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
-      <tr><td>Model-F (fused)</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>118.5%</td></tr>
-      <tr><td>Model-T (price only)</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>37.9%</td></tr>
-      <tr><td>CSI 300 (equal-weight benchmark)</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
-    </table>
-    <p>Top-1 selection diagnostics: win rate <strong>49.3%</strong>, average daily return <strong>0.30%</strong>.</p>
+    <h2><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
+    <p class="lang-en">Daily selection of the top-ranked stock over 1,225 trading days:</p>
+    <p class="lang-zh">每日选取排名最高的股票，共 1,225 个交易日：</p>
+    <div class="lang-en">
+      <table>
+        <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
+        <tr><td>Model-F (fused)</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>118.5%</td></tr>
+        <tr><td>Model-T (price only)</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>37.9%</td></tr>
+        <tr><td>CSI 300 (equal-weight benchmark)</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>策略</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>Alpha</th></tr>
+        <tr><td>Model-F（融合）</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>118.5%</td></tr>
+        <tr><td>Model-T（仅量价）</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>37.9%</td></tr>
+        <tr><td>沪深 300（等权基准）</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
+      </table>
+    </div>
+    <p class="lang-en">Top-1 selection diagnostics: win rate <strong>49.3%</strong>, average daily return <strong>0.30%</strong>.</p>
+    <p class="lang-zh">Top-1 选择诊断：胜率 <strong>49.3%</strong>，平均日收益 <strong>0.30%</strong>。</p>
 
     <figure>
       <img src="../assets/stock/strategy_performance.png" alt="Strategy performance" loading="lazy" />
-      <figcaption>Strategy metrics versus the benchmark.</figcaption>
+      <figcaption><span class="lang-en">Strategy metrics versus the benchmark.</span><span class="lang-zh">策略指标与基准对比。</span></figcaption>
     </figure>
     <figure>
       <img src="../assets/stock/pnl_curve.png" alt="P&L curve" loading="lazy" />
-      <figcaption>Cumulative P&amp;L curve of the top-1 selection strategy.</figcaption>
+      <figcaption><span class="lang-en">Cumulative P&amp;L curve of the top-1 selection strategy.</span><span class="lang-zh">Top-1 选股策略的累计净值曲线。</span></figcaption>
     </figure>
 
-    <h2>6. Backtest caveats</h2>
-    <p>These are simulation results, not live performance. Known limitations:</p>
-    <ul>
+    <h2><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
+    <p class="lang-en">These are simulation results, not live performance. Known limitations:</p>
+    <p class="lang-zh">以上为模拟结果，并非实盘表现。已知局限：</p>
+    <ul class="lang-en">
       <li>No full market-impact or capacity modelling; a top-1 strategy is not deployable at scale without significant slippage.</li>
       <li>Single market (CSI 300) and a single historical window; the prediction period covers a specific macro regime.</li>
       <li>Transaction costs, borrow constraints and limit-up/limit-down frictions are simplified.</li>
       <li>Standard overfitting risk for any pipeline selected partly on validation metrics.</li>
     </ul>
-    <p>
+    <ul class="lang-zh">
+      <li>未完整建模市场冲击与容量；top-1 策略在规模上无法在不产生显著滑点的情况下部署。</li>
+      <li>单一市场（沪深 300）与单一历史区间；预测期覆盖特定的宏观环境。</li>
+      <li>交易成本、融券约束与涨跌停摩擦均做了简化。</li>
+      <li>任何部分依据验证指标选择的流程都存在过拟合风险。</li>
+    </ul>
+    <p class="lang-en">
       The honest reading: the backtest is <em>directional evidence</em> that financial features improve
       the ranking signal — not a claim of 145% annual returns.
     </p>
+    <p class="lang-zh">
+      诚实的读法是：回测是<em>方向性证据</em>——财务特征提升了排序信号——而不是年化 145% 的收益承诺。
+    </p>
 
-    <h2>7. Limitations &amp; next steps</h2>
-    <ul>
+    <h2><span class="lang-en">7. Limitations &amp; next steps</span><span class="lang-zh">7. 局限与后续方向</span></h2>
+    <ul class="lang-en">
       <li>Industry / size neutralization and incremental IC after neutralization.</li>
       <li>Walk-forward retraining instead of a single split.</li>
       <li>Realistic costs and capacity; evaluate a top-N portfolio rather than top-1.</li>
       <li>Extend the fusion layer to more data frequencies (weekly analyst data, monthly macro).</li>
     </ul>
+    <ul class="lang-zh">
+      <li>行业 / 市值中性化，以及中性化后的增量 IC。</li>
+      <li>以滚动窗口（walk-forward）重训取代单次划分。</li>
+      <li>真实的成本与容量建模；评估 top-N 组合而非 top-1。</li>
+      <li>将融合层扩展到更多数据频率（周频分析师数据、月频宏观数据）。</li>
+    </ul>
 
-    <p class="divider-note" style="margin-top:48px;">© 2026 Yifan Feng · Research portfolio</p>
+    <p class="divider-note" style="margin-top:48px;">© 2026 Venti · <span class="lang-en">Research portfolio</span><span class="lang-zh">研究作品集</span></p>
   </main>
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p>© 2026 Yifan Feng</p>
-      <p><a href="../index.html#research">← All research</a></p>
+      <p>© 2026 Venti</p>
+      <p><a href="../index.html#research"><span class="lang-en">← All research</span><span class="lang-zh">← 全部研究</span></a></p>
     </div>
   </footer>
 </body>

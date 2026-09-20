@@ -1,61 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yifan Feng — Quantitative Research Portfolio</title>
+  <title data-en="Venti — Quantitative Research Portfolio" data-zh="Venti — 量化研究作品集">Venti — Quantitative Research Portfolio</title>
   <meta name="description" content="Quantitative research at the intersection of deep learning, financial data and on-chain market microstructure." />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232f6bff'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
+  <script>
+  (function () {
+    var d = document.documentElement;
+    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    var t = get('theme');
+    d.dataset.theme = t || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (get('lang') === 'zh') {
+      d.dataset.lang = 'zh';
+      d.lang = 'zh-CN';
+      var ti = document.querySelector('title');
+      if (ti && ti.dataset.zh) document.title = ti.dataset.zh;
+    }
+  })();
+  </script>
+  <script src="site.js" defer></script>
 </head>
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="index.html">Yifan&nbsp;Feng</a>
-      <nav>
-        <a href="#research">Research</a>
-        <a href="#skills">Toolbox</a>
-      </nav>
+      <a class="brand" href="index.html">Venti</a>
+      <div class="nav-right">
+        <nav>
+          <a href="#research"><span class="lang-en">Research</span><span class="lang-zh">研究</span></a>
+          <a href="#skills"><span class="lang-en">Toolbox</span><span class="lang-zh">技能栈</span></a>
+        </nav>
+        <button class="lang-toggle" type="button">中文</button>
+        <button class="icon-btn theme-toggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main id="top">
     <section class="hero container">
-      <p class="eyebrow">Quantitative Research · Deep Learning · On-Chain Data</p>
-      <h1>Turning messy financial data into<br />testable trading signals.</h1>
-      <p class="lede">
-        I build end-to-end quantitative research pipelines — data engineering, factor modeling,
-        deep learning and backtesting — and stress-test them for the only thing that matters:
-        whether the signal survives real-world frictions.
-      </p>
+      <div class="lang-en">
+        <p class="eyebrow">Quantitative Research · Deep Learning · On-Chain Data</p>
+        <h1>Turning messy financial data into<br />testable trading signals.</h1>
+        <p class="lede">
+          I build end-to-end quantitative research pipelines — data engineering, factor modeling,
+          deep learning and backtesting — and stress-test them for the only thing that matters:
+          whether the signal survives real-world frictions.
+        </p>
+      </div>
+      <div class="lang-zh">
+        <p class="eyebrow">量化研究 · 深度学习 · 链上数据</p>
+        <h1>把杂乱的金融数据，<br />变成可检验的交易信号。</h1>
+        <p class="lede">
+          我搭建端到端的量化研究流程——数据处理、因子建模、深度学习与回测，
+          并始终追问同一个问题：这条信号能否在实际摩擦下存活。
+        </p>
+      </div>
       <div class="hero-links">
-        <a class="btn primary" href="#research">View research</a>
-        <a class="btn" href="#skills">Toolbox</a>
+        <a class="btn primary" href="#research"><span class="lang-en">View research</span><span class="lang-zh">查看研究</span></a>
+        <a class="btn" href="#skills"><span class="lang-en">Toolbox</span><span class="lang-zh">技能栈</span></a>
       </div>
     </section>
 
     <section id="research" class="container">
-      <h2>Selected research</h2>
-      <p class="section-sub">Two independent studies, written up as full reports on this site.</p>
+      <h2><span class="lang-en">Selected research</span><span class="lang-zh">研究精选</span></h2>
+      <p class="section-sub"><span class="lang-en">Two independent studies, written up as full reports on this site.</span><span class="lang-zh">两项独立研究，均以完整报告形式发布于本站。</span></p>
 
       <article class="card">
         <div class="card-media">
           <img src="assets/stock-strategy.png" alt="Strategy performance chart" loading="lazy" />
         </div>
         <div class="card-body">
-          <p class="tags"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span></p>
-          <h3>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h3>
-          <p>
-            A fusion architecture (MLP for quarterly financials + CNN-LSTM for daily price/volume,
-            combined by self-attention) trained with a pairwise ranking objective on CSI 300 constituents.
-          </p>
-          <ul>
-            <li><strong>+26% Mean IC</strong> and <strong>+33% RankIC</strong> from adding fundamentals to a price-only baseline (627k observations)</li>
-            <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark</li>
-            <li>Full ablation, ranking-loss design and honest backtest caveats in the report</li>
-          </ul>
-          <div class="card-links">
-            <a href="research/mixed-frequency-stock-prediction.html">Read the full report →</a>
+          <div class="lang-en">
+            <p class="tags"><span>Deep Learning</span><span>Equities</span><span>PyTorch</span></p>
+            <h3>Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</h3>
+            <p>
+              A fusion architecture (MLP for quarterly financials + CNN-LSTM for daily price/volume,
+              combined by self-attention) trained with a pairwise ranking objective on CSI 300 constituents.
+            </p>
+            <ul>
+              <li><strong>+26% Mean IC</strong> and <strong>+33% RankIC</strong> from adding fundamentals to a price-only baseline (627k observations)</li>
+              <li>Backtest under simplified assumptions: <strong>144.7% annualized, Sharpe 2.98</strong> vs. 26.2% / 1.62 for the equal-weight benchmark</li>
+              <li>Full ablation, ranking-loss design and honest backtest caveats in the report</li>
+            </ul>
+            <p class="card-links"><a href="research/mixed-frequency-stock-prediction.html">Read the full report →</a></p>
+          </div>
+          <div class="lang-zh">
+            <p class="tags"><span>深度学习</span><span>股票</span><span>PyTorch</span></p>
+            <h3>面向横截面股票预测的混频深度学习模型</h3>
+            <p>
+              将季度财务报表（MLP 分支）与日频量价数据（CNN-LSTM 分支）通过自注意力机制融合，
+              并以成对排序损失训练，用于沪深 300 成分股的横截面排序预测。
+            </p>
+            <ul>
+              <li>相比纯量价基线，引入财务信息使 <strong>Mean IC 提升约 26%</strong>、<strong>RankIC 提升约 33%</strong>（62.7 万个观测）</li>
+              <li>简化假设下回测年化 <strong>144.7%，夏普 2.98</strong>；等权基准为 26.2% / 1.62</li>
+              <li>报告包含完整消融实验、排序损失设计与诚实的回测局限说明</li>
+            </ul>
+            <p class="card-links"><a href="research/mixed-frequency-stock-prediction.html">阅读完整报告 →</a></p>
           </div>
         </div>
       </article>
@@ -65,27 +111,41 @@
           <img src="assets/mev-ic.png" alt="MEV factor IC chart" loading="lazy" />
         </div>
         <div class="card-body">
-          <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span></p>
-          <h3>On-Chain MEV Signals for Cryptocurrency Timing</h3>
-          <p>
-            Do Ethereum sandwich attacks predict BTC volatility? 3 MEV-native features plus 26
-            technical factors, de-correlated with Jaccard-similarity spectral clustering, backtested
-            with cost sensitivity analysis.
-          </p>
-          <ul>
-            <li>MEV features show <strong>|IC| 0.10–0.27</strong> and near-orthogonality to classical price factors</li>
-            <li>Strongest channel is <strong>volatility timing</strong>, not direction — MEV measures market fragility</li>
-            <li>Break-even at <strong>~0.23 bp</strong> of fees: a clean demonstration that alpha is execution-bound</li>
-          </ul>
-          <div class="card-links">
-            <a href="research/onchain-mev-crypto-timing.html">Read the full report →</a>
+          <div class="lang-en">
+            <p class="tags"><span>Crypto</span><span>On-Chain Data</span><span>Market Microstructure</span></p>
+            <h3>On-Chain MEV Signals for Cryptocurrency Timing</h3>
+            <p>
+              Do Ethereum sandwich attacks predict BTC volatility? 3 MEV-native features plus 26
+              technical factors, de-correlated with Jaccard-similarity spectral clustering, backtested
+              with cost sensitivity analysis.
+            </p>
+            <ul>
+              <li>MEV features show <strong>|IC| 0.10–0.27</strong> and near-orthogonality to classical price factors</li>
+              <li>Strongest channel is <strong>volatility timing</strong>, not direction — MEV measures market fragility</li>
+              <li>Break-even at <strong>~0.23 bp</strong> of fees: a clean demonstration that alpha is execution-bound</li>
+            </ul>
+            <p class="card-links"><a href="research/onchain-mev-crypto-timing.html">Read the full report →</a></p>
+          </div>
+          <div class="lang-zh">
+            <p class="tags"><span>加密资产</span><span>链上数据</span><span>市场微观结构</span></p>
+            <h3>链上 MEV 信号与加密货币择时</h3>
+            <p>
+              以太坊三明治攻击能否预测 BTC 波动？3 个 MEV 原生特征加上 26 个技术因子，
+              以基于 Jaccard 相似的谱聚类去相关，并进行成本敏感性回测。
+            </p>
+            <ul>
+              <li>MEV 特征 <strong>|IC| 0.10–0.27</strong>，且与经典量价因子接近正交</li>
+              <li>最稳健的通道是<strong>波动率择时</strong>而非方向——MEV 度量的是市场脆弱性</li>
+              <li>盈亏平衡费率约 <strong>0.23 bp</strong>：alpha 真实存在，但受限于执行环境</li>
+            </ul>
+            <p class="card-links"><a href="research/onchain-mev-crypto-timing.html">阅读完整报告 →</a></p>
           </div>
         </div>
       </article>
     </section>
 
     <section id="skills" class="container">
-      <h2>Toolbox</h2>
+      <h2><span class="lang-en">Toolbox</span><span class="lang-zh">技能栈</span></h2>
       <div class="chips">
         <span>Python</span><span>PyTorch</span><span>pandas / NumPy</span><span>scikit-learn</span>
         <span>vectorbt</span><span>Backtesting</span><span>Factor Research</span><span>IC / Clustering</span>
@@ -93,15 +153,16 @@
         <span>SQL</span><span>Parquet</span><span>Git</span><span>Cloudflare Pages</span>
       </div>
       <p class="education">
-        BSc, Renmin University of China — Accounting (Business School) &amp; Finance (Gaoli Institute).
+        <span class="lang-en">BSc, Renmin University of China — Accounting (Business School) &amp; Finance (Gaoli Institute).</span>
+        <span class="lang-zh">中国人民大学 本科 — 会计学（商学院）&amp; 金融学（高礼研究院）。</span>
       </p>
     </section>
   </main>
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p>© 2026 Yifan Feng</p>
-      <p class="divider-note">Research portfolio · venti0331.trade</p>
+      <p>© 2026 Venti</p>
+      <p class="divider-note"><span class="lang-en">Research portfolio · venti0331.trade</span><span class="lang-zh">研究作品集 · venti0331.trade</span></p>
     </div>
   </footer>
 </body>
