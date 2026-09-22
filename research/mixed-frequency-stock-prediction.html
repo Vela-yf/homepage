@@ -224,16 +224,6 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       <figcaption><span class="lang-en">Mixed-frequency fusion: quarterly statements and daily price-volume streams.</span><span class="lang-zh">混频融合：季度报表流与日频量价流。</span></figcaption>
     </figure>
 
-    <h3><span class="lang-en">Stock selection behaviour</span><span class="lang-zh">选股行为</span></h3>
-    <figure>
-      <img src="../assets/stock/stock_selection_frequency.png" alt="Selection frequency" loading="lazy" />
-      <figcaption><span class="lang-en">How often individual names are selected by the fused model.</span><span class="lang-zh">各股票被融合模型选中的频率。</span></figcaption>
-    </figure>
-    <figure>
-      <img src="../assets/stock/stock_selection_academic.png" alt="Selection profile" loading="lazy" />
-      <figcaption><span class="lang-en">Profile of selected names and their scores.</span><span class="lang-zh">被选中股票的画像与得分分布。</span></figcaption>
-    </figure>
-
     <h2><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
     <p class="lang-en">
       Each day the model ranks all CSI 300 constituents by predicted score and holds the top N names,
@@ -290,6 +280,10 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
         <tr><td>沪深 300（等权基准）</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
       </table>
     </div>
+    <figure>
+      <img src="../assets/stock/backtest-n1.png" alt="Backtest comparison N=1" loading="lazy" />
+      <figcaption><span class="lang-en">Backtest comparison (N = 1).</span><span class="lang-zh">投资策略回测结果对比（N = 1）。</span></figcaption>
+    </figure>
     <p class="lang-en">
       At the extreme N = 1 setting the return increases substantially: Model-F reaches 144.7%
       annualized (theoretical, excluding fees and slippage), well above Model-T's 64.2% and the
@@ -301,6 +295,25 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       显著高于 Model-T 的 64.2% 与基准的 26.2%；夏普比率 2.98，最大回撤 −12.9%，
       优于 Model-T 的 −14.9%，接近基准的 −11.1%。
     </p>
+
+    <h3><span class="lang-en">Top 20 most-held stocks</span><span class="lang-zh">持仓天数最高的前 20 只股票</span></h3>
+    <p class="lang-en">
+      No single name dominates: the most frequently held stocks each account for only ~1.14% of
+      holding days, and the list spans financials, advanced manufacturing, logistics and new-energy
+      names — the excess return comes from a broad selection logic rather than a few lucky stocks.
+    </p>
+    <p class="lang-zh">
+      榜单中没有任何单一标的占据主导：出现频次最高的个股持仓天数占比仅约 1.14%，
+      覆盖大金融、高端制造、周期物流与新能源等多个板块——超额收益来自普适的选股逻辑，而非个别标的。
+    </p>
+    <figure>
+      <img src="../assets/stock/stock_selection_frequency.png" alt="Top 20 most-held stocks (frequency view)" loading="lazy" />
+      <figcaption><span class="lang-en">Top 20 stocks by holding days (frequency view).</span><span class="lang-zh">持仓天数最高的前 20 只股票（频率视角）。</span></figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/stock/stock_selection_academic.png" alt="Top 20 most-held stocks (academic view)" loading="lazy" />
+      <figcaption><span class="lang-en">Top 20 stocks by holding days (academic-style view).</span><span class="lang-zh">持仓天数最高的前 20 只股票（学术风格）。</span></figcaption>
+    </figure>
 
     <h2><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
     <p class="lang-en">These are simulation results, not live performance. Known limitations:</p>
