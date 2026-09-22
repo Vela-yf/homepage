@@ -94,10 +94,22 @@ html:not([data-theme="dark"]) .icon-moon { display: block; }
   letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 18px;
 }
 .hero h1 { font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; }
-.hero-head { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
-.hero-edu { border-left: 1px solid var(--border); padding-left: 22px; }
-.hero-edu p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
-.hero-edu .courses { font-size: 0.82rem; max-width: 520px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: 48px; align-items: start; }
+.hero-edu {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 26px 28px;
+}
+.edu-label {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+}
+.edu-item { margin-bottom: 14px; }
+.edu-item .school { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.edu-item .degree { font-size: 0.85rem; color: var(--muted); }
+.hero-edu .courses {
+  font-size: 0.8rem; color: var(--muted); line-height: 1.75;
+  border-top: 1px solid var(--border); padding-top: 14px; margin-top: 4px;
+}
 .slogan { font-size: clamp(1.15rem, 2.4vw, 1.5rem); line-height: 1.45; font-weight: 600; letter-spacing: -0.01em; color: var(--text); margin-top: 14px; max-width: 760px; }
 .lede { color: var(--muted); font-size: 1.08rem; max-width: 640px; margin-top: 20px; }
 .hero-links { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
@@ -162,11 +174,14 @@ section h2 { font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 6px; }
 .footer a { color: var(--muted); }
 .footer a:hover { color: var(--text); }
 
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
 @media (max-width: 760px) {
   .card { grid-template-columns: 1fr; }
   .card.reverse .card-media { order: 0; }
   .hero { padding-top: 64px; }
-  .hero-edu { border-left: none; padding-left: 0; }
   .footer-inner { flex-direction: column; gap: 8px; }
   .nav-right nav { display: none; }
 }
