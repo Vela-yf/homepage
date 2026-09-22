@@ -180,6 +180,11 @@ OHLCV ──► 26+ 技术因子 ──┘              │
       <li><strong>信号构建与成本敏感性。</strong> 合成各聚类信号并进行回测，扫描费率假设以定位盈亏平衡点。</li>
     </ol>
 
+    <figure>
+      <img src="../assets/mev/research-design.png" alt="Research design" loading="lazy" />
+      <figcaption><span class="lang-en">Research design: from on-chain data to timing signals.</span><span class="lang-zh">研究路径设计：从链上数据到择时信号。</span></figcaption>
+    </figure>
+
     <h2><span class="lang-en">5. Results</span><span class="lang-zh">5. 结果</span></h2>
     <h3><span class="lang-en">MEV features vs. classical factors (standalone IC)</span><span class="lang-zh">MEV 特征 vs 经典因子（独立 IC）</span></h3>
     <div class="lang-en">
@@ -204,6 +209,11 @@ OHLCV ──► 26+ 技术因子 ──┘              │
     <p class="lang-zh"><strong>量级。</strong> MEV 特征在本样本中比典型技术因子高出一个数量级的信息量——需要说明的是，这些数值在全样本上测得，属于筛选证据而非样本外表现。</p>
     <p class="lang-en"><strong>Orthogonality.</strong> Correlation with price/volume factors is low, so MEV features survive pruning and clustering as a distinct theme rather than a proxy for volatility.</p>
     <p class="lang-zh"><strong>正交性。</strong> 与量价因子的相关性低，因此 MEV 特征在去相关与聚类中作为独立主题保留下来，而不是波动率的代理变量。</p>
+
+    <figure>
+      <img src="../assets/mev/factor-performance.png" alt="MEV factor performance" loading="lazy" />
+      <figcaption><span class="lang-en">MEV factor performance.</span><span class="lang-zh">MEV 因子表现。</span></figcaption>
+    </figure>
 
     <figure>
       <img src="../assets/mev/f_sandwich_intensity_z.png" alt="Sandwich intensity factor chart" loading="lazy" />
@@ -261,6 +271,15 @@ OHLCV ──► 26+ 技术因子 ──┘              │
       共址部署、maker 返佣、费率分级。因此本研究同时实现了执行层：用于监控 pending 交易与 Uniswap-V2 定价的
       Rust MEV bot，以便观察与原型化三明治执行。
     </p>
+
+    <figure>
+      <img src="../assets/mev/zero-friction.png" alt="Zero-friction backtest" loading="lazy" />
+      <figcaption><span class="lang-en">Backtest results under zero friction.</span><span class="lang-zh">零摩擦情况下的回测结果。</span></figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/mev/friction-01bp.png" alt="Backtest at 0.1 bp friction cost" loading="lazy" />
+      <figcaption><span class="lang-en">Backtest results at 0.1 bp friction cost.</span><span class="lang-zh">摩擦成本 0.1 bp 情况下的回测结果。</span></figcaption>
+    </figure>
 
     <h2><span class="lang-en">6. Limitations</span><span class="lang-zh">6. 局限</span></h2>
     <ul class="lang-en">
