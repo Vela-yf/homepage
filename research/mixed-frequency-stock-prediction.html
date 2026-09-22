@@ -189,34 +189,6 @@
       并不代表模型失效。
     </p>
 
-    <h3><span class="lang-en">Information metrics</span><span class="lang-zh">模型预测精度对比（信息指标）</span></h3>
-    <div class="lang-en">
-      <table>
-        <tr><th>Model</th><th>Mean IC</th><th>Mean RankIC</th><th>ICIR</th><th>RankICIR</th><th>IC Win-Rate</th></tr>
-        <tr><td>Model-T (price only)</td><td>0.007333</td><td>0.005036</td><td>0.110333</td><td>0.075038</td><td>0.546939</td></tr>
-        <tr><td><strong>Model-F (fused)</strong></td><td><strong>0.009227</strong></td><td><strong>0.006686</strong></td><td><strong>0.163558</strong></td><td><strong>0.113994</strong></td><td><strong>0.551020</strong></td></tr>
-      </table>
-    </div>
-    <div class="lang-zh">
-      <table>
-        <tr><th>模型</th><th>Mean IC</th><th>Mean RankIC</th><th>ICIR</th><th>RankICIR</th><th>IC Win-Rate</th></tr>
-        <tr><td>Model-T（仅量价）</td><td>0.007333</td><td>0.005036</td><td>0.110333</td><td>0.075038</td><td>0.546939</td></tr>
-        <tr><td><strong>Model-F（融合）</strong></td><td><strong>0.009227</strong></td><td><strong>0.006686</strong></td><td><strong>0.163558</strong></td><td><strong>0.113994</strong></td><td><strong>0.551020</strong></td></tr>
-      </table>
-    </div>
-    <p class="lang-en">
-      Model-F's Mean IC reaches 0.009227 and Mean RankIC 0.006686 — improvements of ~25.8% and
-      ~32.8% over Model-T. ICIR and RankICIR rise to 0.163558 and 0.113994, with an IC win-rate of
-      55.10%. On the peak validation RankIC, the fused model reached <strong>0.0335</strong> versus
-      <strong>0.0268</strong> for the baseline (+25%), consistent with the ablation findings.
-    </p>
-    <p class="lang-zh">
-      Model-F 的 Mean IC 达到 0.009227、Mean RankIC 达到 0.006686，较 Model-T 分别提升约
-      25.8% 与 32.8%；ICIR 与 RankICIR 提升至 0.163558 和 0.113994，IC 胜率 55.10%。
-      验证集 RankIC 峰值方面，融合模型达到 <strong>0.0335</strong>，基线为 <strong>0.0268</strong>（+25%），
-      与消融实验结论一致。
-    </p>
-
     <figure>
       <img src="../assets/stock/training.png" alt="Model training behaviour" loading="lazy" />
       <figcaption><span class="lang-en">Model training behaviour.</span><span class="lang-zh">模型训练效果。</span></figcaption>
