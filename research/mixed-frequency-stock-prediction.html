@@ -50,13 +50,13 @@
         <li>Built a <strong>mixed-frequency deep learning</strong> pipeline combining <strong>quarterly financial statement data</strong> (MLP branch) with <strong>daily price/volume data</strong> (CNN-LSTM branch), fused by a <strong>self-attention</strong> layer.</li>
         <li>Trained with a <strong>pairwise ranking loss</strong> so the model optimizes the cross-sectional ranking of stocks — the objective that actually matters for selection — instead of pointwise return regression.</li>
         <li>Adding financial features improved cross-sectional <strong>Mean IC by ~26%</strong> (0.0073 → 0.0092) and <strong>RankIC by ~33%</strong> (0.0050 → 0.0067); ICIR rose from 0.11 to 0.16.</li>
-        <li>A top-10 portfolio backtest returned <strong>+69.3% annualized (Sharpe 3.28)</strong> with <strong>+43.1% annualized excess return</strong> versus the equal-weighted CSI 300, in simulation under the simplified assumptions described below.</li>
+        <li>A top-1 selection backtest returned <strong>+144.7% annualized (Sharpe 2.98)</strong> with <strong>+118.5% annualized excess return</strong> versus the equal-weighted CSI 300, in simulation under the simplified assumptions described below.</li>
       </ul>
       <ul class="lang-zh">
         <li>构建了<strong>混频深度学习</strong>流程：将<strong>季度财务数据</strong>（MLP 分支）与<strong>日频量价数据</strong>（CNN-LSTM 分支）通过<strong>自注意力</strong>层融合。</li>
         <li>采用<strong>成对排序损失</strong>训练，直接优化股票的横截面排序——这才是选股真正需要的目标，而非逐点收益率回归。</li>
         <li>引入财务特征后，横截面 <strong>Mean IC 提升约 26%</strong>（0.0073 → 0.0092），<strong>RankIC 提升约 33%</strong>（0.0050 → 0.0067），ICIR 从 0.11 升至 0.16。</li>
-        <li>Top-10 组合回测年化 <strong>+69.3%（夏普 3.28）</strong>，较等权沪深 300 年化超额 <strong>+43.1%</strong>——基于下文所述简化假设的模拟结果。</li>
+        <li>Top-1 选股回测年化 <strong>+144.7%（夏普 2.98）</strong>，较等权沪深 300 年化超额 <strong>+118.5%</strong>——基于下文所述简化假设的模拟结果。</li>
       </ul>
     </div>
 
@@ -150,6 +150,11 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       我们会按时期检查融合层注意力权重，观察模型是否在市场环境变化时在基本面与技术面逻辑之间切换。
     </p>
 
+    <figure>
+      <img src="../assets/stock/model-structure.png" alt="Model structure" loading="lazy" />
+      <figcaption><span class="lang-en">Model structure (forward-pass view).</span><span class="lang-zh">模型结构（前向传播视角）。</span></figcaption>
+    </figure>
+
     <h2><span class="lang-en">4. Results</span><span class="lang-zh">4. 结果</span></h2>
     <div class="lang-en">
       <table>
@@ -179,6 +184,11 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </p>
 
     <figure>
+      <img src="../assets/stock/training.png" alt="Model training behaviour" loading="lazy" />
+      <figcaption><span class="lang-en">Model training behaviour.</span><span class="lang-zh">模型训练效果。</span></figcaption>
+    </figure>
+
+    <figure>
       <img src="../assets/stock/model_comparison_nav.png" alt="Model comparison" loading="lazy" />
       <figcaption><span class="lang-en">Validation metrics and NAV comparison between the price-only and fused models.</span><span class="lang-zh">纯量价模型与融合模型的验证指标与净值对比。</span></figcaption>
     </figure>
@@ -199,26 +209,24 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </figure>
 
     <h2><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
-    <p class="lang-en">Daily selection of the top-10 ranked stocks, in simulation:</p>
-    <p class="lang-zh">每日选取排名前 10 的股票（模拟回测）：</p>
+    <p class="lang-en">Daily selection of the top-ranked stock, in simulation:</p>
+    <p class="lang-zh">每日选取排名最高的股票（模拟回测）：</p>
     <div class="lang-en">
       <table>
         <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
-        <tr><td>Model-F (fused)</td><td>69.3%</td><td>3.28</td><td>−11.1%</td><td>+43.1%</td></tr>
-        <tr><td>Model-T (price only)</td><td>50.8%</td><td>2.31</td><td>−12.6%</td><td>+24.5%</td></tr>
+        <tr><td>Model-F (fused)</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>+118.5%</td></tr>
+        <tr><td>Model-T (price only)</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>+37.9%</td></tr>
         <tr><td>CSI 300 (equal-weight benchmark)</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
       </table>
     </div>
     <div class="lang-zh">
       <table>
         <tr><th>策略</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>Alpha</th></tr>
-        <tr><td>Model-F（融合）</td><td>69.3%</td><td>3.28</td><td>−11.1%</td><td>+43.1%</td></tr>
-        <tr><td>Model-T（仅量价）</td><td>50.8%</td><td>2.31</td><td>−12.6%</td><td>+24.5%</td></tr>
+        <tr><td>Model-F（融合）</td><td>144.7%</td><td>2.98</td><td>−12.9%</td><td>+118.5%</td></tr>
+        <tr><td>Model-T（仅量价）</td><td>64.2%</td><td>1.72</td><td>−14.9%</td><td>+37.9%</td></tr>
         <tr><td>沪深 300（等权基准）</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
       </table>
     </div>
-    <p class="lang-en">For reference, the extreme top-1 configuration returned 144.7% annualized (Sharpe 2.98), but concentrating in a single name is not deployable at scale — the top-10 configuration above is the headline result.</p>
-    <p class="lang-zh">作为参考，极端的 top-1 配置年化收益为 144.7%（夏普 2.98），但单票集中不可规模化部署；上表 top-10 配置为主要结果。</p>
 
     <h2><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
     <p class="lang-en">These are simulation results, not live performance. Known limitations:</p>
