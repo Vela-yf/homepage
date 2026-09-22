@@ -50,13 +50,13 @@
         <li>Built a <strong>mixed-frequency deep learning</strong> pipeline combining <strong>quarterly financial statement data</strong> (MLP branch) with <strong>daily price/volume data</strong> (CNN-LSTM branch), fused by a <strong>self-attention</strong> layer.</li>
         <li>Trained with a <strong>pairwise ranking loss</strong> so the model optimizes the cross-sectional ranking of stocks — the objective that actually matters for selection — instead of pointwise return regression.</li>
         <li>Adding financial features improved cross-sectional <strong>Mean IC by ~26%</strong> (0.0073 → 0.0092) and <strong>RankIC by ~33%</strong> (0.0050 → 0.0067); ICIR rose from 0.11 to 0.16.</li>
-        <li>A top-1 selection backtest returned <strong>+144.7% annualized (Sharpe 2.98)</strong> with <strong>+118.5% annualized excess return</strong> versus the equal-weighted CSI 300, in simulation under the simplified assumptions described below.</li>
+        <li>Portfolio backtests: <strong>+69.3% annualized (Sharpe 3.28)</strong> for the N = 10 portfolio and <strong>+144.7% (Sharpe 2.98)</strong> for the extreme N = 1 setting, versus +26.2% (Sharpe 1.62) for the equal-weighted CSI 300 — simulation under simplified assumptions.</li>
       </ul>
       <ul class="lang-zh">
         <li>构建了<strong>混频深度学习</strong>流程：将<strong>季度财务数据</strong>（MLP 分支）与<strong>日频量价数据</strong>（CNN-LSTM 分支）通过<strong>自注意力</strong>层融合。</li>
         <li>采用<strong>成对排序损失</strong>训练，直接优化股票的横截面排序——这才是选股真正需要的目标，而非逐点收益率回归。</li>
         <li>引入财务特征后，横截面 <strong>Mean IC 提升约 26%</strong>（0.0073 → 0.0092），<strong>RankIC 提升约 33%</strong>（0.0050 → 0.0067），ICIR 从 0.11 升至 0.16。</li>
-        <li>Top-1 选股回测年化 <strong>+144.7%（夏普 2.98）</strong>，较等权沪深 300 年化超额 <strong>+118.5%</strong>——基于下文所述简化假设的模拟结果。</li>
+        <li>组合回测：N = 10 年化 <strong>+69.3%（夏普 3.28）</strong>，极端 N = 1 配置年化 <strong>+144.7%（夏普 2.98）</strong>，等权沪深 300 基准为 +26.2%（夏普 1.62）——基于简化假设的模拟结果。</li>
       </ul>
     </div>
 
@@ -156,31 +156,57 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </figure>
 
     <h2><span class="lang-en">4. Results</span><span class="lang-zh">4. 结果</span></h2>
+    <h3><span class="lang-en">Convergence (statistical performance)</span><span class="lang-zh">模型收敛性对比（统计表现）</span></h3>
     <div class="lang-en">
       <table>
-        <tr><th>Model</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
-        <tr><td>Model-T (price only)</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
-        <tr><td><strong>Model-F (fused)</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
+        <tr><th>Model</th><th>MSE</th><th>RMSE</th><th>MAE</th><th>R²</th></tr>
+        <tr><td>Model-T (price only)</td><td>0.000525</td><td>0.022919</td><td>0.014889</td><td>−0.008389</td></tr>
+        <tr><td><strong>Model-F (fused)</strong></td><td>0.000530</td><td>0.023011</td><td>0.014923</td><td>−0.016490</td></tr>
       </table>
     </div>
     <div class="lang-zh">
       <table>
-        <tr><th>模型</th><th>MSE</th><th>Mean IC ↑</th><th>Mean RankIC ↑</th><th>ICIR ↑</th><th>RankICIR ↑</th></tr>
-        <tr><td>Model-T（仅量价）</td><td>0.000525</td><td>0.0073</td><td>0.0050</td><td>0.110</td><td>0.075</td></tr>
-        <tr><td><strong>Model-F（融合）</strong></td><td>0.000530</td><td><strong>0.0092</strong></td><td><strong>0.0067</strong></td><td><strong>0.164</strong></td><td><strong>0.114</strong></td></tr>
+        <tr><th>模型</th><th>MSE</th><th>RMSE</th><th>MAE</th><th>R²</th></tr>
+        <tr><td>Model-T（仅量价）</td><td>0.000525</td><td>0.022919</td><td>0.014889</td><td>−0.008389</td></tr>
+        <tr><td><strong>Model-F（融合）</strong></td><td>0.000530</td><td>0.023011</td><td>0.014923</td><td>−0.016490</td></tr>
       </table>
     </div>
     <p class="lang-en">
-      Financial information buys a clear improvement in <em>rank</em> quality (+26% IC, +33% RankIC,
-      +49% ICIR) while leaving point-error metrics essentially unchanged. For stock selection,
-      that is the trade-off that matters. On the study's headline metric — <strong>peak validation
-      RankIC</strong> — the fused model reached <strong>0.0335</strong> versus <strong>0.0268</strong>
-      for the baseline (+25%).
+      Both models sit at very similar error levels, and the slightly negative R² is expected for
+      noisy return prediction — it reflects the low signal-to-noise ratio of daily returns rather
+      than a failure of the architecture.
     </p>
     <p class="lang-zh">
-      财务信息带来的是<em>排序</em>质量的明确提升（IC +26%，RankIC +33%，ICIR +49%），而逐点误差指标基本不变。
-      对选股而言，这正是最重要的权衡。在以论文口径为准的指标——<strong>验证集峰值 RankIC</strong> 上，
-      融合模型达到 <strong>0.0335</strong>，基线为 <strong>0.0268</strong>（+25%）。
+      两组模型的绝对误差水平非常接近；R² 略微为负符合日频收益率信噪比极低的特征，
+      并不代表模型失效。
+    </p>
+
+    <h3><span class="lang-en">Information metrics</span><span class="lang-zh">模型预测精度对比（信息指标）</span></h3>
+    <div class="lang-en">
+      <table>
+        <tr><th>Model</th><th>Mean IC</th><th>Mean RankIC</th><th>ICIR</th><th>RankICIR</th><th>IC Win-Rate</th></tr>
+        <tr><td>Model-T (price only)</td><td>0.007333</td><td>0.005036</td><td>0.110333</td><td>0.075038</td><td>0.546939</td></tr>
+        <tr><td><strong>Model-F (fused)</strong></td><td><strong>0.009227</strong></td><td><strong>0.006686</strong></td><td><strong>0.163558</strong></td><td><strong>0.113994</strong></td><td><strong>0.551020</strong></td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>模型</th><th>Mean IC</th><th>Mean RankIC</th><th>ICIR</th><th>RankICIR</th><th>IC Win-Rate</th></tr>
+        <tr><td>Model-T（仅量价）</td><td>0.007333</td><td>0.005036</td><td>0.110333</td><td>0.075038</td><td>0.546939</td></tr>
+        <tr><td><strong>Model-F（融合）</strong></td><td><strong>0.009227</strong></td><td><strong>0.006686</strong></td><td><strong>0.163558</strong></td><td><strong>0.113994</strong></td><td><strong>0.551020</strong></td></tr>
+      </table>
+    </div>
+    <p class="lang-en">
+      Model-F's Mean IC reaches 0.009227 and Mean RankIC 0.006686 — improvements of ~25.8% and
+      ~32.8% over Model-T. ICIR and RankICIR rise to 0.163558 and 0.113994, with an IC win-rate of
+      55.10%. On the peak validation RankIC, the fused model reached <strong>0.0335</strong> versus
+      <strong>0.0268</strong> for the baseline (+25%), consistent with the ablation findings.
+    </p>
+    <p class="lang-zh">
+      Model-F 的 Mean IC 达到 0.009227、Mean RankIC 达到 0.006686，较 Model-T 分别提升约
+      25.8% 与 32.8%；ICIR 与 RankICIR 提升至 0.163558 和 0.113994，IC 胜率 55.10%。
+      验证集 RankIC 峰值方面，融合模型达到 <strong>0.0335</strong>，基线为 <strong>0.0268</strong>（+25%），
+      与消融实验结论一致。
     </p>
 
     <figure>
@@ -209,8 +235,45 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </figure>
 
     <h2><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
-    <p class="lang-en">Daily selection of the top-ranked stock, in simulation:</p>
-    <p class="lang-zh">每日选取排名最高的股票（模拟回测）：</p>
+    <p class="lang-en">
+      Each day the model ranks all CSI 300 constituents by predicted score and holds the top N names,
+      compounding daily returns. Two portfolio sizes were tested.
+    </p>
+    <p class="lang-zh">
+      策略每日按预测得分对沪深 300 成分股排序，持有排名前 N 只股票，并逐日累乘收益。以下测试两种组合数量。
+    </p>
+
+    <h3><span class="lang-en">N = 10 portfolio</span><span class="lang-zh">N = 10 组合</span></h3>
+    <div class="lang-en">
+      <table>
+        <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
+        <tr><td>Model-F (fused)</td><td>69.3%</td><td>3.28</td><td>−11.1%</td><td>+43.1%</td></tr>
+        <tr><td>Model-T (price only)</td><td>50.8%</td><td>2.31</td><td>−12.6%</td><td>+24.5%</td></tr>
+        <tr><td>CSI 300 (equal-weight benchmark)</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="lang-zh">
+      <table>
+        <tr><th>策略</th><th>年化收益</th><th>夏普</th><th>最大回撤</th><th>Alpha</th></tr>
+        <tr><td>Model-F（融合）</td><td>69.3%</td><td>3.28</td><td>−11.1%</td><td>+43.1%</td></tr>
+        <tr><td>Model-T（仅量价）</td><td>50.8%</td><td>2.31</td><td>−12.6%</td><td>+24.5%</td></tr>
+        <tr><td>沪深 300（等权基准）</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
+      </table>
+    </div>
+    <figure>
+      <img src="../assets/stock/backtest-n10.png" alt="Backtest comparison N=10" loading="lazy" />
+      <figcaption><span class="lang-en">Backtest comparison (N = 10).</span><span class="lang-zh">投资策略回测结果对比（N = 10）。</span></figcaption>
+    </figure>
+    <p class="lang-en">
+      The fused strategy shows a clearly higher Sharpe ratio (3.28 vs 2.31) and a lower max drawdown
+      than the price-only model — evidence that fundamental information improves the robustness of
+      the selection signal.
+    </p>
+    <p class="lang-zh">
+      融合策略的夏普比率显著更高（3.28 vs 2.31）、最大回撤更低，证明基本面信息提升了选股信号的稳健性。
+    </p>
+
+    <h3><span class="lang-en">N = 1 (extreme concentration)</span><span class="lang-zh">N = 1（极端集中）</span></h3>
     <div class="lang-en">
       <table>
         <tr><th>Strategy</th><th>Annualized return</th><th>Sharpe</th><th>Max drawdown</th><th>Alpha</th></tr>
@@ -227,6 +290,17 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
         <tr><td>沪深 300（等权基准）</td><td>26.2%</td><td>1.62</td><td>−11.1%</td><td>—</td></tr>
       </table>
     </div>
+    <p class="lang-en">
+      At the extreme N = 1 setting the return increases substantially: Model-F reaches 144.7%
+      annualized (theoretical, excluding fees and slippage), well above Model-T's 64.2% and the
+      benchmark's 26.2%, with a Sharpe of 2.98 and a max drawdown of −12.9% — better than Model-T's
+      −14.9% and close to the benchmark's −11.1%.
+    </p>
+    <p class="lang-zh">
+      N = 1 的极端配置下收益率大幅提升：Model-F 年化收益达到 144.7%（理论值，不含手续费与滑点），
+      显著高于 Model-T 的 64.2% 与基准的 26.2%；夏普比率 2.98，最大回撤 −12.9%，
+      优于 Model-T 的 −14.9%，接近基准的 −11.1%。
+    </p>
 
     <h2><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
     <p class="lang-en">These are simulation results, not live performance. Known limitations:</p>
