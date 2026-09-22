@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-en="Mixed-Frequency Deep Learning for Stock Prediction — Venti" data-zh="混频深度学习与横截面股票预测 — Venti">Mixed-Frequency Deep Learning for Stock Prediction — Venti</title>
   <meta name="description" content="Do financial statements still add alpha beyond price and volume? A mixed-frequency deep learning study on CSI 300 constituents." />
-  <link rel="stylesheet" href="../styles.css?v=2" />
+  <link rel="stylesheet" href="../styles.css?v=3" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>" />
   <script>
   (function () {
@@ -21,7 +21,7 @@
     }
   })();
   </script>
-  <script src="../site.js?v=2" defer></script>
+  <script src="../site.js?v=3" defer></script>
 </head>
 <body>
   <header class="nav">
@@ -38,7 +38,21 @@
     </div>
   </header>
 
-  <main class="article">
+  <main class="article-layout">
+    <aside class="toc">
+      <p class="toc-title"><span class="lang-en">Contents</span><span class="lang-zh">目录</span></p>
+      <ol>
+        <li><a href="#motivation"><span class="lang-en">Motivation</span><span class="lang-zh">研究动机</span></a></li>
+        <li><a href="#data"><span class="lang-en">Data</span><span class="lang-zh">数据</span></a></li>
+        <li><a href="#methodology"><span class="lang-en">Methodology</span><span class="lang-zh">方法</span></a></li>
+        <li><a href="#results"><span class="lang-en">Results</span><span class="lang-zh">结果</span></a></li>
+        <li><a href="#backtest"><span class="lang-en">Backtest</span><span class="lang-zh">回测</span></a></li>
+        <li><a href="#caveats"><span class="lang-en">Backtest caveats</span><span class="lang-zh">回测局限</span></a></li>
+        <li><a href="#limitations"><span class="lang-en">Limitations</span><span class="lang-zh">局限与后续</span></a></li>
+      </ol>
+    </aside>
+
+    <article class="article">
     <a class="back" href="../index.html#research"><span class="lang-en">← Back to research</span><span class="lang-zh">← 返回研究列表</span></a>
 
     <h1><span class="lang-en">Mixed-Frequency Deep Learning for Cross-Sectional Stock Prediction</span><span class="lang-zh">混频深度学习与横截面股票预测</span></h1>
@@ -60,7 +74,7 @@
       </ul>
     </div>
 
-    <h2><span class="lang-en">1. Motivation</span><span class="lang-zh">1. 研究动机</span></h2>
+    <h2 id="motivation"><span class="lang-en">1. Motivation</span><span class="lang-zh">1. 研究动机</span></h2>
     <p class="lang-en">
       Most daily-frequency stock-selection models are trained only on price/volume data. Accounting
       fundamentals move slowly — they are updated quarterly — but they remain the primary channel
@@ -97,7 +111,7 @@
       </table>
     </div>
 
-    <h2><span class="lang-en">2. Data</span><span class="lang-zh">2. 数据</span></h2>
+    <h2 id="data"><span class="lang-en">2. Data</span><span class="lang-zh">2. 数据</span></h2>
     <div class="lang-en">
       <table>
         <tr><th>Block</th><th>Frequency</th><th>Content</th><th>Source</th></tr>
@@ -122,13 +136,7 @@
       确保模型仅使用预测时点可得的信息。
     </p>
 
-    <h2><span class="lang-en">3. Methodology</span><span class="lang-zh">3. 方法</span></h2>
-    <pre class="lang-en">quarterly financials ──► MLP encoder ──────────┐
-                                               ├─► Self-Attention fusion ─► ranking head
-daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise ranking loss)</pre>
-    <pre class="lang-zh">季度财务报表 ──► MLP 编码器 ────────────┐
-                                       ├─► 自注意力融合 ─► 排序输出头
-日频量价数据 ──► CNN（局部）─► LSTM（时序）┘      （成对排序损失）</pre>
+    <h2 id="methodology"><span class="lang-en">3. Methodology</span><span class="lang-zh">3. 方法</span></h2>
     <p class="lang-en">
       Two asymmetric encoders are combined by a single-head self-attention block that learns
       per-sample fusion weights, followed by a linear ranking head. The pairwise ranking objective
@@ -155,7 +163,7 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       <figcaption><span class="lang-en">Model structure (forward-pass view).</span><span class="lang-zh">模型结构（前向传播视角）。</span></figcaption>
     </figure>
 
-    <h2><span class="lang-en">4. Results</span><span class="lang-zh">4. 结果</span></h2>
+    <h2 id="results"><span class="lang-en">4. Results</span><span class="lang-zh">4. 结果</span></h2>
     <h3><span class="lang-en">Convergence (statistical performance)</span><span class="lang-zh">模型收敛性对比（统计表现）</span></h3>
     <div class="lang-en">
       <table>
@@ -215,16 +223,11 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </figure>
 
     <figure>
-      <img src="../assets/stock/model_comparison_nav.png" alt="Model comparison" loading="lazy" />
-      <figcaption><span class="lang-en">Validation metrics and NAV comparison between the price-only and fused models.</span><span class="lang-zh">纯量价模型与融合模型的验证指标与净值对比。</span></figcaption>
-    </figure>
-
-    <figure>
       <img src="../assets/stock/data_fusion_schematic.png" alt="Data fusion schematic" loading="lazy" />
       <figcaption><span class="lang-en">Mixed-frequency fusion: quarterly statements and daily price-volume streams.</span><span class="lang-zh">混频融合：季度报表流与日频量价流。</span></figcaption>
     </figure>
 
-    <h2><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
+    <h2 id="backtest"><span class="lang-en">5. Backtest</span><span class="lang-zh">5. 回测</span></h2>
     <p class="lang-en">
       Each day the model ranks all CSI 300 constituents by predicted score and holds the top N names,
       compounding daily returns. Two portfolio sizes were tested.
@@ -315,7 +318,7 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       <figcaption><span class="lang-en">Top 20 stocks by holding days (academic-style view).</span><span class="lang-zh">持仓天数最高的前 20 只股票（学术风格）。</span></figcaption>
     </figure>
 
-    <h2><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
+    <h2 id="caveats"><span class="lang-en">6. Backtest caveats</span><span class="lang-zh">6. 回测局限</span></h2>
     <p class="lang-en">These are simulation results, not live performance. Known limitations:</p>
     <p class="lang-zh">以上为模拟结果，并非实盘表现。已知局限：</p>
     <ul class="lang-en">
@@ -338,7 +341,7 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
       诚实的读法是：回测是<em>方向性证据</em>——财务特征提升了排序信号——而不是年化 145% 的收益承诺。
     </p>
 
-    <h2><span class="lang-en">7. Limitations &amp; next steps</span><span class="lang-zh">7. 局限与后续方向</span></h2>
+    <h2 id="limitations"><span class="lang-en">7. Limitations &amp; next steps</span><span class="lang-zh">7. 局限与后续方向</span></h2>
     <ul class="lang-en">
       <li>Industry / size neutralization and incremental IC after neutralization.</li>
       <li>Walk-forward retraining instead of a single split.</li>
@@ -353,6 +356,7 @@ daily OHLCV ──► CNN (local) ──► LSTM (temporal)┘        (pairwise 
     </ul>
 
     <p class="divider-note" style="margin-top:48px;">© 2026 Venti · <span class="lang-en">Research portfolio</span><span class="lang-zh">研究作品集</span></p>
+    </article>
   </main>
 
   <footer class="footer">
