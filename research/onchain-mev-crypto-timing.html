@@ -156,30 +156,6 @@
     </p>
 
     <h2 id="methodology"><span class="lang-en">4. Methodology</span><span class="lang-zh">4. 方法</span></h2>
-    <pre class="lang-en">Dune extraction ──► MEV features ─┐
-                                  ├─► IC screen (Spearman) ──► correlation pruning
-OHLCV ──► 26+ tech factors ───────┘              │
-                                                 ▼
-                        Jaccard-similarity spectral clustering
-                                                 │
-                        ┌────────────────────────┴───────────────────────┐
-                        ▼                                                ▼
-              direction prediction                            volatility (|return|) prediction
-                        └────────────────────────┬───────────────────────┘
-                                                 ▼
-                                       signal backtests (vectorbt)</pre>
-    <pre class="lang-zh">Dune 提取 ──► MEV 特征 ──┐
-                        ├─► IC 筛选（Spearman）──► 相关性剪枝
-OHLCV ──► 26+ 技术因子 ──┘              │
-                                        ▼
-                    基于 Jaccard 相似的谱聚类
-                                        │
-                  ┌─────────────────────┴─────────────────────┐
-                  ▼                                           ▼
-            方向预测（收益率符号）                 波动率预测（|收益率|）
-                  └─────────────────────┬─────────────────────┘
-                                        ▼
-                              信号回测（vectorbt）</pre>
     <ol class="lang-en">
       <li><strong>IC screening.</strong> Rank-IC (Spearman) of every factor against forward returns; MEV features are also tested against |returns| to capture the volatility channel.</li>
       <li><strong>De-correlation.</strong> Factors are pruned on pairwise correlation, then clustered by <strong>spectral clustering on a Jaccard similarity matrix</strong>, so each cluster carries one theme (momentum, liquidity, volatility, MEV, …).</li>
