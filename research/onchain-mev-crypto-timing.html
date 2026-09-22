@@ -156,6 +156,10 @@
     </p>
 
     <h2 id="methodology"><span class="lang-en">4. Methodology</span><span class="lang-zh">4. 方法</span></h2>
+    <figure>
+      <img src="../assets/mev/pipeline-en.png" alt="Research pipeline" loading="lazy" />
+      <figcaption><span class="lang-en">Research pipeline: from on-chain and market data to signal backtests.</span><span class="lang-zh">研究流程：从链上与行情数据到信号回测。</span></figcaption>
+    </figure>
     <ol class="lang-en">
       <li><strong>IC screening.</strong> Rank-IC (Spearman) of every factor against forward returns; MEV features are also tested against |returns| to capture the volatility channel.</li>
       <li><strong>De-correlation.</strong> Factors are pruned on pairwise correlation, then clustered by <strong>spectral clustering on a Jaccard similarity matrix</strong>, so each cluster carries one theme (momentum, liquidity, volatility, MEV, …).</li>
@@ -202,19 +206,6 @@
     <figure>
       <img src="../assets/mev/factor-performance.png" alt="MEV factor performance" loading="lazy" />
       <figcaption><span class="lang-en">MEV factor performance.</span><span class="lang-zh">MEV 因子表现。</span></figcaption>
-    </figure>
-
-    <figure>
-      <img src="../assets/mev/f_sandwich_intensity_z.png" alt="Sandwich intensity factor chart" loading="lazy" />
-      <figcaption><span class="lang-en">Sandwich intensity: quantile behaviour and IC profile.</span><span class="lang-zh">三明治强度：分位表现与 IC 画像。</span></figcaption>
-    </figure>
-    <figure>
-      <img src="../assets/mev/f_mev_vol_share_z.png" alt="MEV volume share factor chart" loading="lazy" />
-      <figcaption><span class="lang-en">MEV-attacked volume share — the strongest standalone MEV signal.</span><span class="lang-zh">被三明治攻击的成交量占比——最强的独立 MEV 信号。</span></figcaption>
-    </figure>
-    <figure>
-      <img src="../assets/mev/f_attack_eff_z.png" alt="Attack efficiency factor chart" loading="lazy" />
-      <figcaption><span class="lang-en">Attack efficiency (victim / attacker volume).</span><span class="lang-zh">攻击效率（受害者量 / 攻击者量）。</span></figcaption>
     </figure>
 
     <h3><span class="lang-en">Direction vs. volatility</span><span class="lang-zh">方向 vs 波动率</span></h3>
